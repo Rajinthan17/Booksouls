@@ -19,7 +19,7 @@ const rows = [
   createData('id2', 'User2',  'User2@gmail.com', 'no10, old park street,Kandy', 'Kandy'),
 ];
 
-export default function MaterialTableDemo() {
+export default function UserDetails() {
   const classes = useStyles();
 
   return (

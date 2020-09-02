@@ -27,7 +27,7 @@ const style={
 
 
 
-export default class Sell extends Component{
+export default class EditBook extends Component{
   constructor (){
     super()
     this.state = {
@@ -53,7 +53,7 @@ export default class Sell extends Component{
                   
                   <Grid container spacing={1}>
                       <Grid item xs={12}>
-                        <Typography component="h1" variant="h2" >Add Your Book</Typography>
+                        <Typography component="h1" variant="h2" >Edit Book</Typography>
                       </Grid>
 
 

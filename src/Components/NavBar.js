@@ -19,6 +19,9 @@ import Signup from './Signup';
 import Buy from './Buy';
 import Sell from './Sell';
 import Admin from './Admin';
+import UserDetails from './UserDetails';
+import BookDetails from './BookDetails';
+import EditBook from './EditBook';
 
 
 
@@ -27,7 +30,7 @@ class NavBar extends Component {
     constructor(props){
         super();
         this.state = {
-            isLogin : false,
+            isLogin : true,
             AnchorEl : null
         }
     }
@@ -122,6 +125,9 @@ class NavBar extends Component {
                             <Route exact path={'/sell'} component={Sell} />
                             <Route exact path={'/buyBook'} component={Buy} />
                             <Route exact path={'/admin'} component={Admin} />
+                            <Route exact path={'/userDetails'} component={UserDetails} />
+                            <Route exact path={'/BookDetails'} component={BookDetails} />
+                            <Route exact path={'/edit'} component={EditBook} />
                         </Switch>
                     </div>
                 </Router>

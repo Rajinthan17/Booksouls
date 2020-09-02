@@ -115,7 +115,7 @@ export default function BookDetails() {
               />
               </IconButton>
 
-              <IconButton href="/AddBook" >
+              <IconButton href="/edit" >
                 <EditIcon
                 color="default"
                 align="left"
