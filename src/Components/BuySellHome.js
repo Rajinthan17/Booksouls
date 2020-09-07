@@ -41,12 +41,10 @@ const useStyles = makeStyles((theme) => ({
   
   const style = {
     root: {
-      minWidth: 275,
       backgroundImage: `url("https://i.pinimg.com/originals/04/5c/70/045c70e3dcdb99ec3fa50aebb6cc3668.jpg")`,
       backgroundPosition: 'center',
       backgroundSize: 'cover',
       backgroundRepeat: 'no-repeat',
-      marginTop: 0,
       color: 'white'
     },
     title: {
@@ -68,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
           <Paper>
               <Card style={style.root} variant="outlined" >
                 <div style={{ margin: 40 }}> 
-                      <Grid container spacing={1} style = {{margin:20}}>
+                      <Grid container spacing={1} style = {{marginTop:20}}>
                           <Grid item xs = {7}/>
                           <Grid item xs = {2}>
                               <Paper style={{ marginTop: 10 }}>
@@ -85,10 +83,6 @@ const useStyles = makeStyles((theme) => ({
                               </Paper>
                           </Grid>
                           <Grid item xs = {1}/>
-                      </Grid>
-                      <Grid container spacing={1} >
-                      <Grid item xs = {12}>
-                      </Grid>
                       </Grid>
                 </div>
               </Card>

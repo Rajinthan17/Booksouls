@@ -252,10 +252,10 @@ export default class Sell extends Component{
         <Grid item xs={4}/>
       </Grid>
           ):(
-            <Grid container spacing = {1} style={{marginBottom:"15%"}}>
-              <Grid item xs={4}/>
+            <Grid container spacing = {1} >
+              <Grid item xs={3}/>
               
-              <Grid item xs={4} style={{marginTop:"12%"}}>
+              <Grid item xs={6} style={{marginTop:"12%"}}>
               <Card style = {{backgroundColor:"#8c8c8c"}} >
                 <Paper style={{margin:10}}>
                   <div style = {{padding:20}}>
@@ -266,7 +266,7 @@ export default class Sell extends Component{
                 </Paper>
               </Card>
               </Grid>
-              <Grid item xs={4}/>
+              <Grid item xs={3}/>
               </Grid>
           
           )

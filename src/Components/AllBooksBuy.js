@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: 752,
     },
     demo: {
-        backgroundImage: `url("https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701387610.jpg")`,
+        backgroundImage: `url("https://cdn.wallpapersafari.com/39/25/wIFT2D.jpg")`,
         backgroundPosition: 'center',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',

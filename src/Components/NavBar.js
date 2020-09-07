@@ -33,8 +33,8 @@ class NavBar extends Component {
         this.state = {
             AnchorEl : null
         }
-        // localStorage.setItem('user',true)
-      // localStorage.removeItem('user')
+    // localStorage.setItem('user',true)
+   localStorage.removeItem('user')
     }
     handleClick = (event) => {
         this.setState({

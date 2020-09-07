@@ -9,15 +9,17 @@ import TwitterIcon from '@material-ui/icons/Twitter';
 import EmailIcon from '@material-ui/icons/Email';
 import Logo from './Logo.png';
 import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
 import Tooltip from '@material-ui/core/Tooltip';
 
 
 const useStyles = makeStyles({
     appBar: {
-    top: 'auto',
-      bottom: 0,
+        // top: 'auto',
+        bottom: 0,
       backgroundColor:'#EECE5C',
-      color: 'black'
+      color: 'black',
+      
     },
 });
 
@@ -27,7 +29,8 @@ function BottomBar() {
     let Year = new Date().getFullYear();
 
     return (
-        <AppBar position="flex-end" className={classes.appBar}>
+        <AppBar position="static" className={classes.appBar}>
+             <Toolbar>
             <Grid container spacing={1}>
             <Grid item xs={2}>
                 <br/>
@@ -63,6 +66,7 @@ function BottomBar() {
             </Grid>
             <Grid item xs={2}/>
             </Grid>
+            </Toolbar>
         </AppBar>
     )
 }
