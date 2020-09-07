@@ -31,9 +31,10 @@ class NavBar extends Component {
     constructor(props){
         super();
         this.state = {
-            isLogin : false,
             AnchorEl : null
         }
+        // localStorage.setItem('user',true)
+      // localStorage.removeItem('user')
     }
     handleClick = (event) => {
         this.setState({
@@ -64,7 +65,7 @@ class NavBar extends Component {
                         <Grid item xs={4}/>
                         <Grid item xs = {4}>
                         </Grid>
-                        {this.state.isLogin ? (
+                        {!localStorage.getItem('user') ? (
                             <>
                             <Grid item xs={1}>
                                 <br/>

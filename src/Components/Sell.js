@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import{Card,CardContent,Typography,FormControl,TextField,Grid,Paper} from "@material-ui/core";
 import Button from '@material-ui/core/Button'
+import Alert from '@material-ui/lab/Alert';
 import image5 from "./image5.png"
 
 const style={
@@ -29,11 +30,13 @@ export default class Sell extends Component{
     this.state = {
       edit : false
     }
+    // localStorage.setItem('user',true)
+      // localStorage.removeItem('user')
   }
     render(){
         return(
           
-          
+          localStorage.getItem('user') ?(
           <Grid container>
               <Grid item xs={1}/>
               <Grid item xs={5} style = {{marginTop:60}}>
@@ -248,7 +251,25 @@ export default class Sell extends Component{
         </Grid>
         <Grid item xs={4}/>
       </Grid>
-
+          ):(
+            <Grid container spacing = {1} style={{marginBottom:"15%"}}>
+              <Grid item xs={4}/>
+              
+              <Grid item xs={4} style={{marginTop:"12%"}}>
+              <Card style = {{backgroundColor:"#8c8c8c"}} >
+                <Paper style={{margin:10}}>
+                  <div style = {{padding:20}}>
+                  <Alert variant="outlined" severity="info">
+                    You have to login for selling books — Login first!
+                  </Alert>
+                  </div>
+                </Paper>
+              </Card>
+              </Grid>
+              <Grid item xs={4}/>
+              </Grid>
+          
+          )
       
         )
     }

@@ -7,8 +7,8 @@ import image4 from "./image4.jpg"
 export default class Signup extends Component{
     constructor(){
         super()
-        localStorage.setItem('user',true)
-        // localStorage.removeItem('user')
+        // localStorage.setItem('user',true)
+        localStorage.removeItem('user')
         this.state = {
             name: "Hello",
             email: "",

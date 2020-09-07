@@ -61,7 +61,7 @@ function BottomBar() {
                     Copyrights <CopyrightIcon style={{ fontSize: 15 }}/> {Year}-{Year+1} <br/> Team Privacy
                 </Typography>
             </Grid>
-            <Grid item xs={2}></Grid>
+            <Grid item xs={2}/>
             </Grid>
         </AppBar>
     )
