@@ -17,6 +17,17 @@ function Admin(){
                         <Paper style = {{backgroundColor:"#dde4e6"}}>
                             <h1>Welcome to the Admin Board</h1>
                             <Grid container spacing={1} style ={{padding : 40}}>
+                            <Grid item xs = {4}/>
+                            <Grid item xs = {4} >
+                                <Card style = {{backgroundColor:"#c3cacb"}}>
+                                    <h3>Pending Deliveries</h3>
+                                    <br/>
+                                    <Button align = "right" href = "/pending">Yet To Deliver</Button>
+                                </Card>
+                            </Grid>
+                            <Grid item xs = {4}/>
+                            </Grid>
+                            <Grid container spacing={1} style ={{padding : 40}}>
                             <Grid item xs = {1}/>
                             <Grid item xs = {4} >
                                 <Card style = {{backgroundColor:"#c3cacb"}}>

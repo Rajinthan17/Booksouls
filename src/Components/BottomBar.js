@@ -14,7 +14,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles({
     appBar: {
-    //   top: 'auto',
+    top: 'auto',
       bottom: 0,
       backgroundColor:'#EECE5C',
       color: 'black'

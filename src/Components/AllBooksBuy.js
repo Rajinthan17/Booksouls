@@ -24,6 +24,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder';
 import Pagination from '@material-ui/lab/Pagination';
+import image6 from "./image6.jpg"
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -32,7 +34,10 @@ const useStyles = makeStyles((theme) => ({
       maxWidth: 752,
     },
     demo: {
-      backgroundColor: theme.palette.background.paper,
+        backgroundImage: `url("https://wallpaper-mania.com/wp-content/uploads/2018/09/High_resolution_wallpaper_background_ID_77701387610.jpg")`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        backgroundRepeat: 'no-repeat',
     },
     title: {
       margin: theme.spacing(4, 0, 2),
@@ -49,13 +54,13 @@ const useStyles = makeStyles((theme) => ({
 
 function AllBookBuy() {
     const classes = useStyles();
-    const [isFilter, setIsFilter] = React.useState(null);
+    const [isFilter, setIsFilter] = React.useState(false);
     const [value, setValue] = React.useState([200, 300]);
     const [category, setCategory] = React.useState('None');
     const [condition, setcondition] = React.useState('None');
 
     const handleClick = () => {
-        !isFilter? (setIsFilter("true")):(setIsFilter(null))
+        !isFilter? (setIsFilter("true")):(setIsFilter(false))
         
     }
     const handleChange = (event, newValue) => {
@@ -69,65 +74,10 @@ function AllBookBuy() {
       };
     return(
         <div className={classes.demo}>
-            { !isFilter ? (
             <Grid container spacing={1} >
-                <Grid item xs = {2}/>
-                <Grid item xs = {8} style ={{padding:40}}>
-                    <Card >
-                        <Paper style ={{padding:20}} class = "AllBookSellBG"> 
-                            <div align = "left" style = {{marginTop:40}}>
-                            <TextField
-                            id="input-with-icon-textfield"
-                            label="Search for Books"
-                            InputProps={{
-                                startAdornment: (
-                                <InputAdornment position="start">
-                                    <IconButton type="submit" aria-label="search">
-                                        <SearchIcon />
-                                    </IconButton>
-                                </InputAdornment>
-                                ),
-                            }}
-                            />
-                            <Tooltip title="Filter">
-                                <IconButton onClick = {handleClick} >
-                                    <FilterListIcon/>
-                                </IconButton>
-                            </Tooltip>
-                            </div>
-                            <div>
-                                <h2>Books for Sale</h2>
-                            </div>
-                            <List >
-                            {generate(
-                              
-                                    <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                        <FolderIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary="Title"
-                                        secondary="Descripition"
-                                    />
-                                    <ListItemSecondaryAction>
-                                        <Button href = "/buyBook">Info</Button>
-                                    </ListItemSecondaryAction>
-                                    </ListItem>,
-                            
-                            )}
-                            </List>
-                        </Paper>
-                    </Card>
-                </Grid>
-                <Grid item xs = {2}/>
-                </Grid>
-            ):(
-                <Grid container spacing={1} >
-                <Grid item xs = {1}/>
+            <Grid item xs = {1}/>
+            {isFilter ? (
                 <Grid item xs = {2} >
-                    
                     <Card style ={{marginTop:40}}>
                         <Paper style ={{padding:20}} class = "AllBookSellBG">
                         <h2>Filter</h2>
@@ -185,13 +135,15 @@ function AllBookBuy() {
                         </Paper>
                     </Card>
                 </Grid>
-                
+            ):(
+                <Grid item xs = {2}/>
+            )
+            }
                 <Grid item xs = {8} style ={{padding:40}}>
-                    <Card >
-                        <Paper style ={{padding:20}} class = "AllBookSellBG"> 
-                            <div align = "left" style = {{marginTop:40}}>
+                    <Card style ={{padding:10}} class = "AllBookSellBG" >
+                        <Paper style = {{margin:5}}> 
+                            <div align = "left" style = {{padding:10}}>
                             <TextField
-                            className={classes.margin}
                             id="input-with-icon-textfield"
                             label="Search for Books"
                             InputProps={{
@@ -205,7 +157,7 @@ function AllBookBuy() {
                             }}
                             />
                             <Tooltip title="Filter">
-                                <IconButton onClick = {handleClick}>
+                                <IconButton onClick = {handleClick} >
                                     <FilterListIcon/>
                                 </IconButton>
                             </Tooltip>
@@ -230,6 +182,7 @@ function AllBookBuy() {
                                         <Button href = "/buyBook">Info</Button>
                                     </ListItemSecondaryAction>
                                     </ListItem>,
+                            
                             )}
                             </List>
                         </Paper>
@@ -237,7 +190,6 @@ function AllBookBuy() {
                 </Grid>
                 <Grid item xs = {1}/>
                 </Grid>
-            )}
           </div>
     )
 }

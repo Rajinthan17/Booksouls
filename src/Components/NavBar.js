@@ -22,6 +22,7 @@ import Admin from './Admin';
 import UserDetails from './UserDetails';
 import BookDetails from './BookDetails';
 import EditBook from './EditBook';
+import Pending from './Pending';
 
 
 
@@ -30,7 +31,7 @@ class NavBar extends Component {
     constructor(props){
         super();
         this.state = {
-            isLogin : true,
+            isLogin : false,
             AnchorEl : null
         }
     }
@@ -49,7 +50,7 @@ class NavBar extends Component {
         return(
             <>
                 <Router>
-                    <AppBar position = "static" style = {{backgroundColor:"#EECE5C"}}>
+                    <AppBar position = "sticky" style = {{backgroundColor:"#EECE5C"}}>
                         <Toolbar style = {{color:"black"}}>
                         <Grid container spacing={1}>
                         <Grid item xs={2}>
@@ -128,6 +129,7 @@ class NavBar extends Component {
                             <Route exact path={'/userDetails'} component={UserDetails} />
                             <Route exact path={'/BookDetails'} component={BookDetails} />
                             <Route exact path={'/edit'} component={EditBook} />
+                            <Route exact path={'/pending'} component={Pending} />
                         </Switch>
                     </div>
                 </Router>

@@ -7,8 +7,8 @@ import image4 from "./image4.jpg"
 export default class Signup extends Component{
     constructor(){
         super()
-        // localStorage.setItem('user',true)
-        localStorage.removeItem('user')
+        localStorage.setItem('user',true)
+        // localStorage.removeItem('user')
         this.state = {
             name: "Hello",
             email: "",
@@ -264,6 +264,17 @@ export default class Signup extends Component{
                     style = {{width: 300}}
                     />
                 </div>
+                <div style = {{color:"  #7b7c7e  "}}>
+                        <input
+                          accept="image/*"
+                          display="none"
+                          id="contained-button-file"
+                          multiple
+                          type="file"
+                        />
+                         <br/>
+                        <span style = {{fontSize:12}}>Update your Profile picture </span>
+                </div>
 {/* ------------------------------------------------------------- */}
                 <div style = {{fontSize: 12}}>
                     <input 
@@ -311,7 +322,7 @@ export default class Signup extends Component{
                     variant="outlined"
                     placeholder = "Username"
                     helperText ="Your Username can't to be Change"
-                    value = {this.state.name} 
+                    value = "Hello"
                     size="small"
                     style = {{width: 300}}
                     />
@@ -356,6 +367,17 @@ export default class Signup extends Component{
                     helperText = "Update your Date of Birth if there any changes"
                     style = {{width: 300}}
                 />
+                </div>
+                <div style = {{color:"  #7b7c7e  "}}>
+                        <input
+                          accept="image/*"
+                          display="none"
+                          id="contained-button-file"
+                          multiple
+                          type="file"
+                        />
+                        <br/>
+                        <span style = {{fontSize:12}}>If you need Update your Profile picture </span>
                 </div>
 
 
