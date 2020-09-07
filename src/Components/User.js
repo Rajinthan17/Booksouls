@@ -1,7 +1,6 @@
 import React from 'react';
-import { makeStyles, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead,InputAdornment, TableRow, Paper, Grid,InputBase,TextField} from '@material-ui/core';
+import { makeStyles, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead,InputAdornment, TableRow, Paper, Grid,TextField} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import AddBoxIcon from '@material-ui/icons/AddBox';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from '@material-ui/core';
@@ -11,7 +10,7 @@ const useStyles = makeStyles({
     minWidth: 650,
   },
   grid: {
-      margin: '35px 150px 20px 50px',
+      margin: 40,
       padding: '10px 10px 10px 10px',
       backgroundColor: "black"
   },
@@ -59,7 +58,7 @@ export default function BookDetails() {
   
   return (
       <div>
-    <Grid className={classes.grid}>
+    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
       <Paper className = {classes.paper}>
         <h1>User Details</h1>
         <div className={classes.search}>

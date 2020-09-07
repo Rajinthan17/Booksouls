@@ -23,8 +23,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import FolderIcon from '@material-ui/icons/Folder';
-import Pagination from '@material-ui/lab/Pagination';
-import image6 from "./image6.jpg"
 
 
 

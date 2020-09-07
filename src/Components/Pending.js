@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles, Checkbox, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Grid,TextField,InputAdornment} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
-import AddBoxIcon from '@material-ui/icons/AddBox';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { IconButton } from '@material-ui/core';
@@ -47,7 +46,7 @@ export default function Pending() {
   
   return (
       <div>
-    <Grid className={classes.grid}>
+    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
       <Paper className = {classes.paper}>
         <h1>Pending Deliver Details</h1>
         <div className={classes.search}>

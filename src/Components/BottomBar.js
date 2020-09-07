@@ -57,7 +57,7 @@ function BottomBar() {
             </Grid>
             <Grid item xs={8} style = {{marginTop:10}}>
                 <Typography variant="overline" align="center" >
-                    <img src = {Logo} height="50" width="150" /><br/>
+                    <img src = {Logo} height="50" width="150" alt = "Logo"/><br/>
                     Copyrights <CopyrightIcon style={{ fontSize: 15 }}/> {Year}-{Year+1} <br/> Team Privacy
                 </Typography>
             </Grid>

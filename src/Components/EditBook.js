@@ -1,11 +1,7 @@
 import React, {Component} from "react";
 import{Card,CardContent,Typography,FormControl,TextField,Grid,Paper} from "@material-ui/core";
 import Button from '@material-ui/core/Button'
-import { green } from "@material-ui/core/colors";
 import image5 from "./image5.png"
-import IconButton from '@material-ui/core/IconButton';
-import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import Avatar from '@material-ui/core/Avatar';
 
 const style={
     

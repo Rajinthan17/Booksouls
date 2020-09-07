@@ -17,9 +17,9 @@ import AllBookBuy from './AllBooksBuy';
 import Login from './Login';
 import Signup from './Signup';
 import Buy from './Buy';
+import User from './User';
 import Sell from './Sell';
 import Admin from './Admin';
-import UserDetails from './UserDetails';
 import BookDetails from './BookDetails';
 import EditBook from './EditBook';
 import Pending from './Pending';
@@ -126,7 +126,7 @@ class NavBar extends Component {
                             <Route exact path={'/sell'} component={Sell} />
                             <Route exact path={'/buyBook'} component={Buy} />
                             <Route exact path={'/admin'} component={Admin} />
-                            <Route exact path={'/userDetails'} component={UserDetails} />
+                            <Route exact path={'/userDetails'} component={User} />
                             <Route exact path={'/BookDetails'} component={BookDetails} />
                             <Route exact path={'/edit'} component={EditBook} />
                             <Route exact path={'/pending'} component={Pending} />
