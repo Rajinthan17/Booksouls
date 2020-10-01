@@ -1,7 +1,11 @@
 import React, {Component} from "react";
 import{Card,CardContent,Typography,FormControl,TextField,Grid,Paper} from "@material-ui/core";
 import Button from '@material-ui/core/Button'
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import InputLabel from '@material-ui/core/InputLabel';
 import image5 from "./image5.png"
+import axios from 'axios';
 
 const style={
     
@@ -21,16 +25,117 @@ const style={
     }     
   }
 
-
-
 export default class EditBook extends Component{
   constructor (){
     super()
     this.state = {
-      edit : false
+      edit : false,
+      id:0,
+      name  : '',
+      authorName : '',
+	    description : '',
+	    category : '',
+      isbNumber : '',
+      price: '',
+      usage : '',
+      sellerId : ''
     }
+    //console.log(localStorage.getItem('bookId'))
+    // console.log(this.state.id)
+    //localStorage.removeItem('bookId')
   }
+
+  BookNameChange = (e) => {
+    this.setState ({
+        name:e.target.value
+    })
+    //console.log(e.target.value)
+  }
+
+  AuthorNameChange = (e) => {
+    this.setState ({
+      authorName:e.target.value
+    })
+    console.log(this.state.authorName)
+  }
+
+  DescriptionChange = (e) => {
+    this.setState ({
+      description:e.target.value
+    })
+  }
+
+  CategoryChange = (e) => {
+    this.setState ({
+      category:e.target.value
+    })
+  }
+
+  ISBNumberChange = (e) => {
+    this.setState ({
+      isbNumber:e.target.value
+    })
+  }
+
+  PriceChange = (e) => {
+    this.setState ({
+      price:e.target.value
+    })
+  }
+
+  UsageChange = (e) => {
+    this.setState ({
+      usage:e.target.value
+    })
+  }
+
+  updateUser = (e) => {
+    // this.setState({
+    //   id:localStorage.getItem('bookId')
+    // })
+    e.preventDefault()
+    console.log("ffffffffffffffffffffffffff")
+    let book = {
+      name : this.state.name,
+      authorName : this.state.authorName,
+      description : this.state.description,
+      category : this.state.category,
+      isbNumber : this.state.isbNumber,
+      price : this.state.price,
+      usage : this.state.usage,
+      sellerId : this.state.sellerId
+    }
+    axios.put('http://localhost:8081/books/' + this.props.match.params.id,book)
+      .then((Resposne) => {
+        console.log(Response)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    //console.log(book)
+  }
+  componentDidMount () {
+    // console.log(this.props.match.params.id)
+    this.setState({
+      id:this.props.match.params.id
+    })
+    axios.get('http://localhost:8081/books/' + this.props.match.params.id)
+    .then((Response) => {
+      console.log(Response)
+      this.setState({
+        name:Response.data.name,
+        authorName : Response.data.authorName,
+        description : Response.data.description,
+        category : Response.data.category,
+        isbNumber : Response.data.isbNumber,
+        price: Response.data.price,
+        usage : Response.data.usage,
+        sellerId :Response.data.sellerId
+      })
+    })
+}
     render(){
+      // console.log(this.state.authorName)
         return(
           
           
@@ -62,6 +167,8 @@ export default class EditBook extends Component{
                                required
                                fullWidth
                                id="Book name"
+                               value = {this.state.name}
+                               onChange = {this.BookNameChange}
                                label="Book Name"
                                name="book name"
                                autoComplete="book name"
@@ -74,6 +181,8 @@ export default class EditBook extends Component{
                           <TextField
                                variant="outlined"
                                margin="normal"
+                               value = {this.state.authorName}
+                               onChange = {this.AuthorNameChange}
                                required
                                fullWidth
                                id="author name"
@@ -81,9 +190,6 @@ export default class EditBook extends Component{
                                name="author name"
                                autoComplete="auther name"
                          />
-
-
-
                         </FormControl>
                       </Grid>
                       <Grid item xs={6}>
@@ -92,6 +198,8 @@ export default class EditBook extends Component{
                               type = "text area"
                                variant="outlined"
                                margin="normal"
+                               value = {this.state.description}
+                               onChange = {this.DescriptionChange}
                                required
                                fullWidth
                                id="descripition"
@@ -107,6 +215,8 @@ export default class EditBook extends Component{
                                variant="outlined"
                                margin="normal"
                                required
+                               value = {this.state.isbNumber}
+                               onChange = {this.ISBNumberChange}
                                fullWidth
                                id="ISBN number"
                                label="ISBN Number"
@@ -117,11 +227,68 @@ export default class EditBook extends Component{
                       </Grid>
 
 
+                      
+
+
+                      <Grid item xs={6}>
+                        <FormControl fullWidth>
+                        <InputLabel id="Condition">Condition</InputLabel>
+                          <Select
+                              //  variant="outlined"
+                              //  margin="normal"
+                               value = {this.state.usage}
+                               onChange = {this.UsageChange}
+                                required
+                               fullWidth
+                               id="Usage"
+                               label="Usage"
+                              //  name="Usage"
+                              //  autoComplete="Usage"
+                         >
+                         <MenuItem value="">
+                                    <em>All</em>
+                                </MenuItem>
+                                <MenuItem value={"New"}>Like New</MenuItem>
+                                <MenuItem value={"good"}>Good</MenuItem>
+                                <MenuItem value={"avg"}>Average</MenuItem>
+                                <MenuItem value={"used"}>Used</MenuItem>
+                                </Select>
+                        </FormControl>
+                      </Grid>
+
+
+                      <Grid item xs={6}>
+                        <FormControl fullWidth>
+                        <InputLabel id="Category">Category</InputLabel>
+                          <Select
+                              //  variant="outlined"
+                              //  margin="normal"
+                               value = {this.state.category}
+                               onChange = {this.CategoryChange}
+                               fullWidth
+                               id="Category"
+                               label="Category"
+                              //  name="Category"
+                              //  autoComplete="Category"
+                         >
+                           <MenuItem value="">
+                                    <em>All</em>
+                                </MenuItem>
+                                <MenuItem value={"story"}>Story</MenuItem>
+                                <MenuItem value={"novel"}>Novel</MenuItem>
+                                <MenuItem value={"scifi"}>Sci-Fi</MenuItem>
+                                <MenuItem value={"drama"}>Drama</MenuItem>
+                                </Select>
+                        </FormControl>
+                      </Grid>
+
                       <Grid item xs={6}>
                         <FormControl fullWidth>
                           <TextField
                                variant="outlined"
                                margin="normal"
+                               value = {this.state.price}
+                               onChange = {this.PriceChange}
                                required
                                fullWidth
                                id="price"
@@ -132,40 +299,8 @@ export default class EditBook extends Component{
                         </FormControl>
                       </Grid>
 
-
                       <Grid item xs={6}>
-                        <FormControl fullWidth>
-                          <TextField
-                               variant="outlined"
-                               margin="normal"
-                               required
-                               fullWidth
-                               id="Usage"
-                               label="Usage"
-                               name="Usage"
-                               autoComplete="Usage"
-                         />
-                        </FormControl>
-                      </Grid>
-
-
-                      <Grid item xs={6}>
-                        <FormControl fullWidth>
-                          <TextField
-                               variant="outlined"
-                               margin="normal"
-                               fullWidth
-                               id="phone number"
-                               label="Phone Number"
-                               name="phone number"
-                               autoComplete="phone number"
-                         />
-                        </FormControl>
-                      </Grid>
-
-
-                      <Grid item xs={6}>
-                        <FormControl fullWidth>
+                        {/* <FormControl fullWidth>
                           <TextField
                                variant="outlined"
                                margin="normal"
@@ -175,7 +310,7 @@ export default class EditBook extends Component{
                                name="address"
                                autoComplete="address"
                          />
-                        </FormControl>
+                        </FormControl> */}
                       </Grid>
                       <Grid item xs={6}>
                          <input
@@ -189,15 +324,16 @@ export default class EditBook extends Component{
                       <Grid item xs={6}/>
                         
                       
-                      <Grid item xs={2}>
+                      <Grid item xs={3}>
                         <FormControl>
                           <Button
                                type="submit"
                                fullWidth
                                variant="contained"
                                color="primary"
+                               onClick={this.updateUser}
                            >
-                             ADD
+                             Update
                           </Button>
                        </FormControl>
                        </Grid>

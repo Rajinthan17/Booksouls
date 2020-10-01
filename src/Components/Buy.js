@@ -16,6 +16,7 @@ import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import axios from 'axios';
 
 
 
@@ -70,12 +71,55 @@ export default class Buy extends Component{
         super()
         this.state = {
           alertMessage : false,
-          open : false
+          open : false,
+          book:{},
+          buyerName:'',
+          buyerAddress:'',
+          buyerPhoneNum:'',
         }
         
       }
 
+      componentDidMount(){
+          axios.get('http://localhost:8081/books/'+ this.props.match.params.id)
+          .then((Response) => {
+            //console.log(Response.data)
+            this.setState({
+              book:Response.data
+            })
+          })
+          
+          
+    }
+
+    buyerNameChange = (e) => {
+      this.setState({
+        buyerName:e.target.value
+      })
+    }
+    buyerAddressChange = (e) => {
+      this.setState({
+        buyerAddress:e.target.value
+      })
+    }
+    buyerPhNoChange = (e) => {
+      this.setState({
+        buyerPhoneNum:e.target.value
+      })
+    }
+
       IsAlert =  () =>{
+        let pending = {
+          book : this.state.book,
+          buyerName : this.state.buyerName,
+          buyerAddress : this.state.buyerAddress,
+          buyerPhoneNum : this.state.buyerPhoneNum
+        }
+        axios.post('http://localhost:8081/pending',pending)
+        .then((Response) => {
+          console.log(pending)
+          axios.delete('http://localhost:8081/books/'+ this.props.match.params.id)
+        })
         this.setState ({
           alertMessage : true,
           open : false,
@@ -95,11 +139,8 @@ export default class Buy extends Component{
       
   
     render(){
-      
+      //console.log(this.state.book)
         return(
-          
-
-       
         <Grid container spacing = {1}  style = {{marginTop:30}}> 
         <Grid item xs={5}>
           <img src = {image3} height = "65%" width = "70%" alt = "Background Books"/>
@@ -115,13 +156,13 @@ export default class Buy extends Component{
                       </Grid>
                       <Grid item xs={7}>
                         <div>
-                          <h2>Book name</h2>
-                          <h4 style={{textAlign:"left"}}>Author :</h4>
-                          <h4 style={{textAlign:"left"}}>Descrpition :</h4>
-                          <h4 style={{textAlign:"left"}}>ISBN Number :</h4>
-                          <h4 style={{textAlign:"left"}}>Published :</h4>
-                          <h4 style={{textAlign:"left"}}>Usage :</h4>
-                          <h4 style={{textAlign:"left"}}>Price :</h4>
+                          <h2>{this.state.book.name}</h2>
+                          <h4 style={{textAlign:"left"}}>Author : {this.state.book.authorName}</h4>
+                          <h4 style={{textAlign:"left"}}>Descrpition : {this.state.book.description}</h4>
+                          <h4 style={{textAlign:"left"}}>ISBN Number : {this.state.book.isbNumber}</h4>
+                          <h4 style={{textAlign:"left"}}>Category : {this.state.book.category}</h4>
+                          <h4 style={{textAlign:"left"}}>Usage : {this.state.book.usage}</h4>
+                          <h4 style={{textAlign:"left"}}>Price : {this.state.book.price}</h4>
                         </div>
                       </Grid>
                       <Grid item xs={10}/>
@@ -148,6 +189,8 @@ export default class Buy extends Component{
                               autoFocus
                               margin="dense"
                               id="name"
+                              value = {this.state.buyerName}
+                              onChange = {this.buyerNameChange}
                               helperText = ""
                               label="Name"
                               type="text"
@@ -156,6 +199,8 @@ export default class Buy extends Component{
                             <TextField
                               margin="dense"
                               id="address"
+                              value = {this.state.buyerAddress}
+                              onChange = {this.buyerAddressChange}
                               helperText = ""
                               label="Deliver Address"
                               type="text"
@@ -164,6 +209,8 @@ export default class Buy extends Component{
                             <TextField
                               margin="dense"
                               id="telNum"
+                              value = {this.state.buyerPhoneNum}
+                              onChange = {this.buyerPhNoChange}
                               helperText = ""
                               label="Telephone Number"
                               type="text"

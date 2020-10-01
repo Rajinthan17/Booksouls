@@ -15,8 +15,8 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles({
     appBar: {
-        // top: 'auto',
-        bottom: 0,
+        top: 'auto',
+        marginBottom: 0,
       backgroundColor:'#EECE5C',
       color: 'black',
       
@@ -30,7 +30,6 @@ function BottomBar() {
 
     return (
         <AppBar position="static" className={classes.appBar}>
-             <Toolbar>
             <Grid container spacing={1}>
             <Grid item xs={2}>
                 <br/>
@@ -66,7 +65,6 @@ function BottomBar() {
             </Grid>
             <Grid item xs={2}/>
             </Grid>
-            </Toolbar>
         </AppBar>
     )
 }

@@ -3,14 +3,16 @@ import './SignupStyle.css';
 import {Paper,  Grid, TextField, Button} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import image4 from "./image4.jpg"
+import BookService from './BookService';
+import axios from 'axios';
 
 export default class Signup extends Component{
     constructor(){
         super()
         // localStorage.setItem('user',true)
-        localStorage.removeItem('user')
+        // localStorage.removeItem('user')
         this.state = {
-            name: "Hello",
+            name: "",
             email: "",
             address:"",
             password: "",
@@ -24,8 +26,27 @@ export default class Signup extends Component{
             addressError:"",
             rememberMe: false,
             UpdatePassword : false,
+            Books:[]
         }
     }
+
+    reloadUserList = () => {
+        axios.get("http://localhost:8081/books/page")
+        .then((Response) => {
+            console.log(Response.data.data)
+        this.setState({
+            Books:Response.data.data},
+            console.log(this.state.Books))
+
+        })
+    }
+    // componentDidMount() {
+    //     this.reloadUserList();
+    //     console.log(this.state.Books)
+    // }
+ 
+ 
+
     handleChange = event =>{
         const isCheckbox = event.target.type === 'checkbox';
         this.setState({
@@ -167,7 +188,9 @@ export default class Signup extends Component{
         // }
     };
     render(){
+        console.log(this.state.Books)
         return(
+            
             !localStorage.getItem('user') ? (
             <Grid container spacing={1} style = {{marginTop:30}}>
                 <Grid item xs = {7}>
@@ -179,6 +202,7 @@ export default class Signup extends Component{
             <form onSubmit = {this.handleSubmit}>
                 <br/>
                 <h2>Register Your Account</h2>
+                {/* {this.state.Books} */}
                     <TextField 
                     Required
                     name = "name"

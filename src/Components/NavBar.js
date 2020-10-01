@@ -33,8 +33,8 @@ class NavBar extends Component {
         this.state = {
             AnchorEl : null
         }
-    // localStorage.setItem('user',true)
-   localStorage.removeItem('user')
+    localStorage.setItem('user',true)
+//    localStorage.removeItem('user')
     }
     handleClick = (event) => {
         this.setState({
@@ -47,6 +47,8 @@ class NavBar extends Component {
             AnchorEl  : null
         });
       };
+
+    
     render(){
         return(
             <>
@@ -125,11 +127,11 @@ class NavBar extends Component {
                             <Route exact path={'/signup'} component={Signup} />
                             <Route exact path={'/buy'} component={AllBookBuy} />
                             <Route exact path={'/sell'} component={Sell} />
-                            <Route exact path={'/buyBook'} component={Buy} />
+                            <Route exact path={'/buyBook/:id'} component={Buy} />
                             <Route exact path={'/admin'} component={Admin} />
                             <Route exact path={'/userDetails'} component={User} />
                             <Route exact path={'/BookDetails'} component={BookDetails} />
-                            <Route exact path={'/edit'} component={EditBook} />
+                            <Route exact path={'/edit/:id'} component={EditBook} />
                             <Route exact path={'/pending'} component={Pending} />
                         </Switch>
                     </div>
