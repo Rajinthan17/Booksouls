@@ -76,6 +76,7 @@ export default class Buy extends Component{
           buyerName:'',
           buyerAddress:'',
           buyerPhoneNum:'',
+          image:[""]
         }
         
       }
@@ -83,9 +84,10 @@ export default class Buy extends Component{
       componentDidMount(){
           axios.get('http://localhost:8081/books/'+ this.props.match.params.id)
           .then((Response) => {
-            //console.log(Response.data)
+            console.log(Response.data)
             this.setState({
-              book:Response.data
+              book:Response.data,
+              image:Response.data.image
             })
           })
           
@@ -152,7 +154,7 @@ export default class Buy extends Component{
                   <Grid container spacing={1}>
                       <Grid item xs={5}>
                         <br/><br/><br/>
-                        <BuyPhoto/>
+                        <BuyPhoto image = {this.state.image}/>
                       </Grid>
                       <Grid item xs={7}>
                         <div>

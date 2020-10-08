@@ -40,7 +40,9 @@ export default class Sell extends Component{
       isbNumber : '',
       price: '',
       usage : '',
-      sellerId : ''
+      sellerId : '',
+      //selectedFile:[],
+      image : []
 
     }
     // localStorage.setItem('user',true)
@@ -54,6 +56,20 @@ export default class Sell extends Component{
     //console.log(e.target.value)
   }
 
+  PhotoChange =(e) => {
+    var file = new FileReader()
+    console.log(e.target.value)
+  //   file = e.target.value
+  //   console.log(file)
+  //   this.setState ({
+  //     files:e.target.value
+  // })
+  // file.onload = function(){
+  //   alert(file.result)
+  //   file.readAsBinaryString()
+  // }
+ 
+  }
   AuthorNameChange = (e) => {
     this.setState ({
       authorName:e.target.value
@@ -91,8 +107,47 @@ export default class Sell extends Component{
     })
   }
 
+  onFileChangeHandler = (e) => {
+    e.preventDefault();
+    var elements=[];
+    console.log(e.target.files.length)
+    let files = e.target.files
+    console.log(files)
+    for(let i = 0; i<e.target.files.length; i++){
+    let reader = new FileReader()
+    reader.readAsDataURL(files[i])
+    reader.onload = (e) => {
+      console.log(" Imagedata",e.target.result)
+      elements.push(e.target.result)
+      this.setState({
+        image:elements
+      })
+    }
+    // console.log(elements)
+  }
+
+      //console.log(e)
+    // this.setState({
+    //     selectedFile: e.target.files
+    // });
+    
+    // fetch('http://localhost:8080/upload', {
+    //     method: 'post',
+    //     body: formData
+    // }).then(res => {
+    //     if(res.ok) {
+    //         console.log(res.data);
+    //         alert("File uploaded successfully.")
+    //     }
+    // });
+};
+
+
   addBook = (e) => {
     e.preventDefault()
+    const formData = new FormData();
+    formData.append('file', this.state.selectedFile);
+    console.log(formData)
     let book = {
       name : this.state.name,
       authorName : this.state.authorName,
@@ -100,6 +155,7 @@ export default class Sell extends Component{
       category : this.state.category,
       isbNumber : this.state.isbNumber,
       price : this.state.price,
+      image:this.state.image,
       usage : this.state.usage,
       sellerId : this.state.sellerId
     }
@@ -108,6 +164,7 @@ export default class Sell extends Component{
   }
 
     render(){
+      console.log(this.state.image)
         return(
           
           localStorage.getItem('user') ?(
@@ -305,13 +362,8 @@ export default class Sell extends Component{
                         </FormControl>
                       </Grid> */}
                       <Grid item xs={6}>
-                         <input
-                          accept="image/*"
-                          display="none"
-                          id="contained-button-file"
-                          multiple
-                          type="file"
-                        />
+                      {/* <label>Upload Your File </label> */}
+                            <input type="file" className="form-control" name="file" multiple onChange={this.onFileChangeHandler}/>
                       </Grid>
                       <Grid item xs={6}/>
                         
