@@ -118,7 +118,7 @@ export default function BookDetails(props) {
 
   const deleteBook = (deleteId) => {
     axios.delete('http://localhost:8081/books/' + deleteId)
-    // window.location.reload()
+    window.location.reload()
   }
 
   const serachData = () => {
@@ -276,11 +276,12 @@ export default function BookDetails(props) {
               
               <TableCell>
               <IconButton
-              onClick = {() => deleteBook(row.id)}
+              onClick={() => {if(window.confirm('Delete the item?')){deleteBook(row.id)}}}
+              //onClick = {() => deleteBook(row.id)}
               // onClick = {() => window.location.reload()}
               >
+              
               <DeleteIcon
-                
                 color="default"
                 align="left"
                 inputProps={{ 'aria-label': 'DeleteIcon with default color' }}

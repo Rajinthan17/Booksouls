@@ -131,6 +131,7 @@ class NavBar extends Component {
                             <Route exact path={'/admin'} component={Admin} />
                             <Route exact path={'/userDetails'} component={User} />
                             <Route exact path={'/BookDetails'} component={BookDetails} />
+                            <Route exact path={'/edit'} component={EditBook} />
                             <Route exact path={'/edit/:id'} component={EditBook} />
                             <Route exact path={'/pending'} component={Pending} />
                         </Switch>

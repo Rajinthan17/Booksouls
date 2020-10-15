@@ -89,11 +89,11 @@ export default function BookListHome() {
       
       <div className={classes.root}>
         {console.log(books)}
-        <ListSubheader><strong>Recently Added Books</strong></ListSubheader>
+        <ListSubheader style = {{fontSize:18}}><strong style = {{color:"#36c2f7"}}>Recently Added Books</strong></ListSubheader>
         <GridList className={classes.gridList} cols={5}>
           {books.map((tile) => (
             <GridListTile key={tile.id}>
-              <img src={tile.title} alt= "Book Photo" />
+              <img src={tile.image[0]} alt= "Book Photo" />
               <GridListTileBar
                 title={tile.bookName}
                 subtitle={<span>by: {tile.authorName}</span>}

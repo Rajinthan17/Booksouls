@@ -38,12 +38,33 @@ export default class EditBook extends Component{
       isbNumber : '',
       price: '',
       usage : '',
-      sellerId : ''
+      sellerId : '',
+      image:[]
     }
     //console.log(localStorage.getItem('bookId'))
     // console.log(this.state.id)
     //localStorage.removeItem('bookId')
   }
+
+onFileChangeHandler = (e) => {
+    e.preventDefault();
+    var elements=[];
+    console.log(e.target.files.length)
+    let files = e.target.files
+    console.log(files)
+    for(let i = 0; i<e.target.files.length; i++){
+    let reader = new FileReader()
+    reader.readAsDataURL(files[i])
+    reader.onload = (e) => {
+      console.log(" Imagedata",e.target.result)
+      elements.push(e.target.result)
+      this.setState({
+        image:elements
+      })
+    }
+    // console.log(elements)
+  }
+}
 
   BookNameChange = (e) => {
     this.setState ({
@@ -93,7 +114,7 @@ export default class EditBook extends Component{
     // this.setState({
     //   id:localStorage.getItem('bookId')
     // })
-    e.preventDefault()
+    //e.preventDefault()
     console.log("ffffffffffffffffffffffffff")
     let book = {
       name : this.state.name,
@@ -102,12 +123,15 @@ export default class EditBook extends Component{
       category : this.state.category,
       isbNumber : this.state.isbNumber,
       price : this.state.price,
+      image:this.state.image,
       usage : this.state.usage,
       sellerId : this.state.sellerId
     }
     axios.put('http://localhost:8081/books/' + this.props.match.params.id,book)
       .then((Resposne) => {
         console.log(Response)
+        this.props.history.push("/BookDetails");
+        // window.location.push('/admin')
       })
       .catch((error) => {
         console.log(error)
@@ -129,13 +153,14 @@ export default class EditBook extends Component{
         category : Response.data.category,
         isbNumber : Response.data.isbNumber,
         price: Response.data.price,
+        image : Response.data.image,
         usage : Response.data.usage,
         sellerId :Response.data.sellerId
       })
     })
 }
     render(){
-      // console.log(this.state.authorName)
+      //console.log(this.state.image)
         return(
           
           
@@ -316,6 +341,9 @@ export default class EditBook extends Component{
                          <input
                           accept="image/*"
                           display="none"
+                          //value = {this.state.image}
+
+                          onChange={this.onFileChangeHandler}
                           id="contained-button-file"
                           multiple
                           type="file"
@@ -327,11 +355,12 @@ export default class EditBook extends Component{
                       <Grid item xs={3}>
                         <FormControl>
                           <Button
-                               type="submit"
+                               //type="submit"
                                fullWidth
                                variant="contained"
                                color="primary"
-                               onClick={this.updateUser}
+                               onClick={() => {if(window.confirm('Update the Book?')){this.updateUser()}}}
+                               //onClick={this.updateUser}
                            >
                              Update
                           </Button>

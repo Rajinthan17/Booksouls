@@ -144,7 +144,7 @@ export default class Sell extends Component{
 
 
   addBook = (e) => {
-    e.preventDefault()
+    //e.preventDefault()
     const formData = new FormData();
     formData.append('file', this.state.selectedFile);
     console.log(formData)
@@ -160,6 +160,11 @@ export default class Sell extends Component{
       sellerId : this.state.sellerId
     }
     axios.post('http://localhost:8081/books',book)
+    .then((Resposne) => {
+      console.log(Response)
+      //this.props.history.push("/home");
+      // window.location.push('/admin')
+    })
     console.log(book)
   }
 
@@ -371,11 +376,12 @@ export default class Sell extends Component{
                       <Grid item xs={2}>
                         <FormControl>
                           <Button
-                               type="submit"
+                               //type="submit"
                                size = "small"
                                fullWidth
                                variant="contained"
                                color="primary"
+                              //  onClick={() => {if(window.confirm('Add the Book?')){this.addBook()}}}
                                onClick = {this.addBook}
                            >
                              ADD

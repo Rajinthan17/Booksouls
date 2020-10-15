@@ -123,7 +123,7 @@ export default function Pending() {
 
   const deletePending = (deleteId) => {
     axios.delete('http://localhost:8081/pending/' + deleteId)
-    // window.location.reload()
+    window.location.reload()
   }
 
 
@@ -279,7 +279,8 @@ export default function Pending() {
             <TableRow>
               <TableCell>
               <IconButton
-               onClick = {() => deletePending(row.id)}
+                onClick={() => {if(window.confirm('Delete the item?')){deletePending(row.id)}}}
+               //onClick = {() => deletePending(row.id)}
               >
               <DeleteIcon
                 color="default"
