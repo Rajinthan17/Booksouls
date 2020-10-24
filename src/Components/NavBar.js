@@ -17,12 +17,13 @@ import AllBookBuy from './AllBooksBuy';
 import Login from './Login';
 import Signup from './Signup';
 import Buy from './Buy';
-import User from './User';
 import Sell from './Sell';
 import Admin from './Admin';
 import BookDetails from './BookDetails';
 import EditBook from './EditBook';
 import Pending from './Pending';
+import User from './User';
+import AddUser from './AddUser';
 
 
 
@@ -140,6 +141,8 @@ class NavBar extends Component {
                             <Route exact path={'/edit'} component={EditBook} />
                             <Route exact path={'/edit/:id'} component={EditBook} />
                             <Route exact path={'/pending'} component={Pending} />
+                            <Route exact path={'/AddUser'} component={AddUser} />
+                            <Route exact path={'/AddUser/:id'} component={AddUser} />
                         </Switch>
                     </div>
                 </Router>

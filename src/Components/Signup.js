@@ -313,7 +313,8 @@ export default class Signup extends Component{
                     validators={['required',"isRePassword"]}
                     errorMessages = {["This field is not Empty","Password did not match"]}
                     value = {this.state.repassword} 
-                    onChange = {this.RePasswordValidate} 
+                    onChange = {this.RePasswordValidate}
+                    size="small" 
                     style = {{width: 300}}
                     />
                 </div>

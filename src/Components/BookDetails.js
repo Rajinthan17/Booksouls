@@ -231,6 +231,7 @@ export default function BookDetails(props) {
         setCount (Response.data.Total_No_Of_Elements)
         console.log(count)
         setBooks ( Response.data.data)
+        setPage(0);
         console.log(page)
         console.log(books)
         //console.log(Response.data.data)

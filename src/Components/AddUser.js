@@ -6,7 +6,12 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import FormatListBulletedIcon from '@material-ui/icons/FormatListBulleted';
 import { Style } from '@material-ui/icons';
 import SaveIcon from '@material-ui/icons/Save';
-// import Alert from '@material-ui/lab/Alert';
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import Alert from '@material-ui/lab/Alert';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import userService from './userService';
 
 
 
@@ -32,50 +37,166 @@ const style = {
     },
 }
 
-export default class Home extends Component {
+export default class AddUser extends Component {
 
-  // constructor(){
-  //   super()
-  //   this.state = {
-  //     alertMessage : false,
-  //     open : false
-  //   }
-  // }
+  constructor(){
+    super()
+    this.state = {
+      alertMessage : false,
+      open : false,
+      name: "",
+      email: "",
+      address:"",
+      phone:'',
+      role : 'user'
+    }
+  }
 
-  // IsAlert =  () =>{
-  //   this.setState ({
-  //     alertMessage : true,
-  //     open : false,
-  //   })
-  // };
+  HandleUpdatePassword = () => {
+    this.setState({
+        UpdatePassword:true
+    })
+}
 
-//   constructor(props){
-//     super(props)
-//     this.state = {
-//         successful : true,
-//         message:''
-//     }
-// }
+NameValidate = (e) => {
+    this.setState({
+        name : e.target.value
+    })
+}
 
-// Booksave = (e) => {
-//   e.preventDefault();
-//   this.setState({
-//     successful: false,
-//     message: "Sucess- User Add Sucessfully"
-//   })
-// }
+AddressValidate = (e) => {
+    this.setState ({
+        address:e.target.value
+    })
+}
+EmailValidate = (e) => {
+    this.setState ({
+        email:e.target.value
+    })
+}  
+PhoneValidate = (e) => {
+    this.setState ({
+        phone:e.target.value
+    })
+}  
+RoleChange = (e) => {
+  this.setState ({
+      role:e.target.value
+  })
+}
+PasswordValidate = (e) => {
+  this.setState ({
+      password:e.target.value
+  })
+}
+RePasswordValidate = (e) => {
+  this.setState ({
+      repassword:e.target.value
+  })
+}
+
+save = () => {
+  if(this.props.match.params.id){
+    let _user = {
+      email : this.state.email,
+      address : this.state.address,
+      phoneNum : this.state.phone,
+      updateroles : [this.state.role]
+    }
+
+    userService.updateUserByAdmin(this.props.match.params.id,_user)
+    .then((Response) => {
+      console.log(Response)
+    })
+  }else{
+    let _user = {
+      username : this.state.name,
+      email : this.state.email,
+      address : this.state.address,
+      phoneNum : this.state.phone,
+      password : this.state.password,
+      roles : [this.state.role]
+    }
+
+    userService.createUser(_user)
+    .then((Response) => {
+      console.log(Response)
+    })
+  }
+}
+
+
+
+componentDidMount() {
+  ValidatorForm.addValidationRule('isUserName',(value) => {
+      if((this.state.name.length>4)){
+      return true;
+      }
+      return false;
+      })
+  ValidatorForm.addValidationRule('isEmail',(value) => {
+      if(this.state.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) ){
+      return true;
+      }
+      return false;
+      })
+  ValidatorForm.addValidationRule('isAddress',(value) => {
+      if((this.state.address.length>10)){
+      return true;
+      }
+      return false;
+      })
+  ValidatorForm.addValidationRule('isPhone',(value) => {
+      if((this.state.phone.length==10)){
+      return true;
+      }
+      return false;
+      })
+  ValidatorForm.addValidationRule('isPassword',(value) => {
+        if((this.state.password.length>=8) && (this.state.password.length<=16)){
+        return true;
+        }
+        return false;
+        })
+
+  ValidatorForm.addValidationRule('isRePassword',(value) => {
+        if((this.state.repassword == this.state.password)){
+        return true;
+        }
+        return false;
+        })
+
+      if(this.props.match.params.id){
+        userService.getUserById(this.props.match.params.id)
+        .then((Response) => {
+            this.setState({
+              name:Response.data.username,
+              email : Response.data.email,
+              phone : Response.data.phoneNum,
+              address : Response.data.address,
+            })
+            if(Response.data.roles[0].name === "ROLE_ADMIN"){
+              this.setState ({role:'admin'})
+            }else{
+              this.setState ({role:'user'})
+            }
+            console.log(Response)
+        })
+      }
+  }
+
+
 
   render(){
       return(
           <Grid container>
-            <Grid item xs={3}/>
-            {/* <Grid item xs={1}/> */}
-            <Grid item xs={6}>
+            <Grid item xs={2}/>
+            <Grid item xs={8}>
               <Card style={style.root}>
                 <Paper style={{margin:20,}}>
                 
                 <CardContent>
-                    <form>
+                <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}>
                       <Grid container spacing={3}>
                       {/* <IconButton edge="start" style={style.menuButton} color="inherit" aria-label="menu">
                   <MenuIcon />
@@ -85,50 +206,154 @@ export default class Home extends Component {
                   <AddBoxIcon/>
                   </Icon>
                   
-                      
-                      <span style = {{fontSize:30}}><b>Add New User</b></span>
+                      {this.props.match.params.id ? (
+                      <span style = {{fontSize:30}}><b>Edit User</b></span>
+                      ):(
+                        <span style = {{fontSize:30}}><b>Add New User</b></span>
+                      )}
                       </Grid>
 
-                      
-                        <Grid item xs={6}>
-                        <FormControl >
-                          
-                          <TextField style = {{width : "150%"}} variant="outlined" label="User Name*" type="text" name="User Nmae" fullWidth />
-                        <Typography>Enter User Name</Typography>
-                        </FormControl>
-                        </Grid>
+                        {this.props.match.params.id ? (
+                          <Grid item xs={6}>
+                          <TextValidator 
+                            disabled
+                            required='true' 
+                            label="Username" 
+                            variant="outlined" 
+                            helperText="Enter your username" 
+                            validators={['required',"isUserName"]}
+                            onChange={this.NameValidate} 
+                            value={this.state.name}
+                            errorMessages = {["This field is not Empty","Username must be more than 4 characters"]}
+                            size="small"
+                            style = {{width: 300}}
+                            />
+                          </Grid>
+                          ) : (
+                            <Grid item xs={6}>
+                          <TextValidator 
+                            
+                            required='true' 
+                            label="Username" 
+                            variant="outlined" 
+                            helperText="Enter your username" 
+                            validators={['required',"isUserName"]}
+                            onChange={this.NameValidate} 
+                            value={this.state.name}
+                            errorMessages = {["This field is not Empty","Username must be more than 4 characters"]}
+                            size="small"
+                            style = {{width: 300}}
+                            />
+                          </Grid>
+                          )}
+                        
 
                         <Grid item xs={6}>
-                        <FormControl >
-                          
-                          <TextField style = {{width : "150%"}} variant="outlined" label="E-mail*" type="text" name="e-mail" fullWidth />
-                        <Typography>Enter E-mail adderss</Typography>
-                        </FormControl>
-                        </Grid>
-
-                        <Grid item xs={6}>
-                        <FormControl >
-                          
-                          <TextField style = {{width : "150%"}} variant="outlined" label="Password*" type="text" name="password" fullWidth />
-                        <Typography>Enter your Password</Typography>
-                        </FormControl>
-                        </Grid>
-
-                        <Grid item xs={6}>
-                        <FormControl >
-                          
-                          <TextField 
-                          style = {{width : "150%"}}
+                        <TextValidator 
+                          required='true' 
+                          label="E-Mail" 
                           variant="outlined" 
-                          label="Adderss*" 
-                          type="text" 
-                          name="adderss"
-                          fullWidth 
+                          helperText="Enter your email" 
+                          validators={['required',"isEmail"]}
+                          errorMessages = {["This field is not Empty","E-Mail must be in E-Mail format"]}
+                          value = {this.state.email} 
+                          onChange = {this.EmailValidate} 
+                          size="small"
+                          style = {{width: 300}}
                           />
-                        <Typography>Enter your adderss</Typography>
-                        </FormControl>
                         </Grid>
 
+                        <Grid item xs={6}>
+                        <TextValidator 
+                          Required
+                          required='true' 
+                          label="Address" 
+                          variant="outlined" 
+                          helperText="Enter your Address" 
+                          validators={['required',"isAddress"]}
+                          errorMessages = {["This field is not Empty","Address must be more than 4 characters"]}
+                          value = {this.state.address} 
+                          onChange = {this.AddressValidate} 
+                          size="small"
+                          style = {{width: 300}}
+                          />
+                        </Grid>
+                        <Grid item xs={6}>
+                        <TextValidator 
+                            Required
+                            required='true' 
+                            label="Phone Number" 
+                            variant="outlined" 
+                            helperText="Enter your Phone Number" 
+                            validators={['required',"isPhone"]}
+                            errorMessages = {["This field is not Empty","Phone Number must be in 10 Numbers"]}
+                            value = {this.state.phone} 
+                            onChange = {this.PhoneValidate} 
+                            size="small"
+                            style = {{width: 300}}
+                            />
+                        </Grid>
+                        {this.props.match.params.id ? (null ):(
+                          <>
+                          <Grid item xs={6}>
+                          <TextValidator 
+                              Required
+                              required='true' 
+                              label="Password" 
+                              type = 'password'
+                              variant="outlined" 
+                              helperText="Enter your Password" 
+                              validators={['required',"isPassword"]}
+                              errorMessages = {["This field is not Empty","Password must be between 8 & 16 characters"]}
+                              value = {this.state.password} 
+                              onChange = {this.PasswordValidate} 
+                              size="small"
+                              style = {{width: 300}}
+                              />
+                          </Grid>
+                          <Grid item xs={6}>
+                          <TextValidator 
+                              Required
+                              required='true' 
+                              label="Password" 
+                              type = 'password'
+                              variant="outlined" 
+                              helperText="Enter your Password Again" 
+                              validators={['required',"isRePassword"]}
+                              errorMessages = {["This field is not Empty","Password did not match"]}
+                              value = {this.state.repassword} 
+                              onChange = {this.RePasswordValidate} 
+                              size="small"
+                              style = {{width: 300}}
+                              />
+                          </Grid>
+                          </>
+                        )}
+                        <Grid item xs={6}>
+                        <InputLabel id="role">Role</InputLabel>
+                          <Select
+                               fullWidth
+                               id="role"
+                               label="Role"
+                               style = {{width: 300}}
+                               value = {this.state.role}
+                               onChange = {this.RoleChange}
+                         >
+                                <MenuItem value={"user"}>ROLE_USER</MenuItem>
+                                <MenuItem value={"admin"}>ROLE_ADMIN</MenuItem>
+                                </Select>
+                        </Grid>
+                        
+                        <Grid item xs={6} style = {{align:'left'}} >
+                          <input
+                            accept="image/*"
+                            display="none"
+                            id="contained-button-file"
+                            multiple
+                            type="file"
+                          />
+                          {/* <span style = {{fontSize:12}}>Update your Profile picture </span> */}
+                        </Grid>
 
                         <Grid item xs={1.5}>
                         <FormControl>
@@ -139,7 +364,7 @@ export default class Home extends Component {
                                variant="contained"
                                color="primary"
                                startIcon={<saveIcon/>}
-                               onClick={this.handleClickOpen}
+                               onClick={this.save}
                                
                            >
                              Save
@@ -180,38 +405,12 @@ export default class Home extends Component {
                        </Grid>
                       
                       </Grid>
-
-                      {/* {
-                    this.state.message && (
-                    <div>
-                      <Typography color={this.state.successful ? 'succesful' : 'error'} variant="overline" display="block" gutterBottom>
-                          <strong>{this.state.message}</strong>
-                      </Typography>
-                    </div>
-                  )
-                  } */}
-                    </form>
-
-
-                    {/* {this.state.alertMessage ? 
-                          (<><br/>
-                          <Alert severity="success">We will deliver your book soon..!! — Thank you!</Alert>
-                            {/* <Box component="fieldset" borderColor="transparent" > 
-                              <Typography ><center> Rate Us </center></Typography>
-                              <Rating
-                                name="Rate"
-                                defaultValue={1}
-                                getLabelText={(value) => customIcons[value].label}
-                                IconContainerComponent={IconContainer}
-                              />
-                            </Box> */}
-                          {/* </>):(null)
-                        }     */} 
+                    </ValidatorForm>
                 </CardContent>
                 </Paper>
                  </Card>
             </Grid>
-            <Grid item xs={4}/>
+            <Grid item xs={2}/>
           </Grid>
       )
   }
