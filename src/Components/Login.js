@@ -2,19 +2,17 @@ import React,{Component} from 'react';
 import {Paper, Grid, TextField, Button} from '@material-ui/core';
 import './LoginStyle.css';
 import image2 from './image2.jpg'
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import AuthService from './AuthService';
 
 
 export default class Login extends Component{
     constructor(){
         super()
         this.state = {
-            email: "",
             username : "",
             password: "",
             repassword: "",
-            emailError: "",
-            passwordError: "",
-            repasswordError: "",
             fogot:false,
             codeSubmit : false,
             code : "",
@@ -26,26 +24,6 @@ export default class Login extends Component{
             updatePassword:true
         })
     }
-    UserNameOrEmail = (e) => {
-        if(!this.state.email && !this.state.password ){
-            this.setState({
-                emailError : "This Field is Required"
-            })
-        }
-        else if (e.target.value.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) ){
-            this.setState({
-                email : e.target.value,
-                emailError : ""
-            })
-        }
-        else {
-            this.setState({
-                username : e.target.value,
-                emailError : ""
-            })
-        }
-    }
-
     fogotChange = () => {
         this.setState({
             fogot : true
@@ -64,55 +42,67 @@ export default class Login extends Component{
 
     UserNameValidate = (e) => {
         this.setState({
-            email : e.target.value
+            username : e.target.value
         })
-        if(!this.state.email){
-            this.setState({
-                emailError : "Please Enter E-mail/Username"
-            })
-        }
-        else {
-            this.setState({
-                emailError : ""
-            })
-        }
-
     }
 
     PasswordValidate = (e) =>{
         this.setState({
             password : e.target.value
         })
-        if(!this.state.password){
-            this.setState({
-                passwordError : "Please Enter your Password"
-            })
-        }
-        else {
-            this.setState({
-                passwordError : ""
-            })
-        }
     }
     RePasswordValidate = (e) => {
         this.setState ({
             repassword:e.target.value
         })
-        if (!this.state.password) {
-            this.setState ({
-                repasswordError:"Reenter the password!"
-            }) 
+    }
+
+    loginRender = () => {
+        this.props.history.push('/home')
+        window.location.reload()
+    }
+
+    handleSubmit = () => {
+        if((this.state.username.length>4) && (this.state.password.length>=8) && (this.state.password.length<=16)){
+            let _user = {
+                username : this.state.username,
+                password : this.state.password
+            }
+            AuthService.login(_user)
+            .then((Response)=> {
+                console.log(Response)
+                localStorage.setItem('user',Response.data.username)
+                localStorage.setItem('id',Response.data.id)
+                localStorage.setItem('token',Response.data.basicToken)
+                localStorage.setItem('tokenType',Response.data.tokenType)
+                //console.log(localStorage.getItem('user'))
+                // this.props.history.push('/home')
+                // window.location.reload()
+                this.loginRender()
+            })
         }
-        else if(this.state.password !== this.state.repassword ){
-            this.setState ({
-                repasswordError:"Check the password"
-            }) 
-        }
-        else {
-            this.setState ({
-                repasswordError:""
-            }) 
-        }
+    }
+
+    componentDidMount(){
+        ValidatorForm.addValidationRule('isUserName',(value) => {
+            if((this.state.username.length>4)){
+            return true;
+            }
+            return false;
+            })
+        
+        ValidatorForm.addValidationRule('isPassword',(value) => {
+            if((this.state.password.length>=8) && (this.state.password.length<=16)){
+            return true;
+            }
+            return false;
+            })
+        ValidatorForm.addValidationRule('isRePassword',(value) => {
+            if((this.state.repassword == this.state.password)){
+            return true;
+            }
+            return false;
+            })
     }
     render(){
         return(   
@@ -124,37 +114,42 @@ export default class Login extends Component{
                 </Grid>
                 <Grid item xs={4} style = {{backgroundColor:"#8c8c8c"}}>
                     <Paper className = 'paper'>
-                    <form onSubmit = {this.handleSubmit}>
+                    <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}onSubmit={this.handleSubmit}>
                         <div>
                             <h1>
                                 Login 
                             </h1>
                         </div>
                 <div>
-                    <TextField 
-                    name = "email"
-                    placeholder = "Username/E-mail"
-                    style = {{outlineColor: "black"}}
-                    helperText = {this.state.emailError?(<span style = {{color: "red"}}>{this.state.emailError}</span>):("Please Enter Your Username/E-mail")}
-                    label = "Username/E-mail"
-                    variant="outlined"
-                    onChange = {this.UserNameOrEmail}
-                    onChange = {this.UserNameValidate}
+                <TextValidator 
+                    required='true' 
+                    label="Username" 
+                    variant="outlined" 
+                    helperText="Enter your username" 
+                    validators={['required',"isUserName"]}
+                    onChange={this.UserNameValidate} 
+                    value={this.state.username}
+                    errorMessages = {["This field is not Empty","Username must be more than 4 characters"]}
+                    size="small"
+                    style = {{width: 300}}
                     />
-                    <br/><br/>
                 </div>
 
                 <div>
-                    <TextField 
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="Password" 
                     type = 'password'
-                    name = "password"
-                    label="password"
-                    placeholder = "password"
-                    helperText = {this.state.passwordError?(<span style = {{color: "red"}}>{this.state.passwordError}</span>):("Please Enter Your password")}
-                    variant="outlined"
-                    onChange = {this.PasswordValidate}
+                    variant="outlined" 
+                    helperText="Enter your Password" 
+                    validators={['required',"isPassword"]}
+                    errorMessages = {["This field is not Empty","Password must be between 8 & 16 characters"]}
+                    value = {this.state.password} 
+                    onChange = {this.PasswordValidate} 
+                    size="small"
+                    style = {{width: 300}}
                     />
-                    <br/><br/>
                 </div>
                 <div>
                     <Button
@@ -167,7 +162,7 @@ export default class Login extends Component{
                 </div>
                 <h5>A New User <a href = "/signup">Create an Account</a></h5>
                 <h5>Fogot password <u style = {{color:"blue"}}><a onClick = {this.fogotChange}>Click here</a></u></h5>
-                </form>
+                </ValidatorForm>
                     </Paper>
                 </Grid>
                 </Grid>
@@ -255,38 +250,42 @@ export default class Login extends Component{
                 </Grid>
                 <Grid item xs={4} style = {{backgroundColor:"#8c8c8c"}}>
                     <Paper style = {{padding : 30}}>
-                    <form onSubmit = {this.handleSubmit}>
+                    <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}onSubmit={this.handleSubmit}>
                         <div>
                             <h1>
                                 Update Password 
                             </h1>
                         </div>
                         <div>
-                    <TextField 
+                        <TextValidator 
+                    Required
+                    required='true' 
+                    label="Password" 
                     type = 'password'
-                    variant="outlined"
-                    size="small"
-                    name = "password"
-                    placeholder = "password"
-                    helperText ={this.state.passwordError? (<span style = {{color: "red"}}>{this.state.passwordError}</span>):("Please Enter Your Password")}
+                    variant="outlined" 
+                    helperText="Enter your Password" 
+                    validators={['required',"isPassword"]}
+                    errorMessages = {["This field is not Empty","Password must be between 8 & 16 characters"]}
                     value = {this.state.password} 
                     onChange = {this.PasswordValidate} 
-                    onClick = {this.PasswordValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* --------------------------------------------------------------------------- */}
                 <div>
-                    <TextField 
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="Password" 
                     type = 'password'
-                    name = "repassword"
-                    size="small"
-                    variant="outlined"
-                    helperText ={this.state.repasswordError? (<span style = {{color: "red"}}>{this.state.repasswordError}</span>):("Please Enter Your Password")}
-                    placeholder = "Reenter the password"
+                    variant="outlined" 
+                    helperText="Enter your Password Again" 
+                    validators={['required',"isRePassword"]}
+                    errorMessages = {["This field is not Empty","Password did not match"]}
                     value = {this.state.repassword} 
                     onChange = {this.RePasswordValidate} 
-                    onClick = {this.RePasswordValidate}
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
@@ -299,7 +298,7 @@ export default class Login extends Component{
                     >
                         Update
                     </Button>
-                </form>
+                </ValidatorForm>
                 </Paper>
                 </Grid>
                 </Grid>

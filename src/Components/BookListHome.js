@@ -95,7 +95,7 @@ export default function BookListHome() {
             <GridListTile key={tile.id}>
               <img src={tile.image[0]} alt= "Book Photo" />
               <GridListTileBar
-                title={tile.bookName}
+                title={tile.name}
                 subtitle={<span>by: {tile.authorName}</span>}
                 classes={{
                   root: classes.titleBar,

@@ -33,8 +33,7 @@ class NavBar extends Component {
         this.state = {
             AnchorEl : null
         }
-    localStorage.setItem('user',true)
-//    localStorage.removeItem('user')
+        console.log(localStorage.getItem('user'))
     }
     handleClick = (event) => {
         this.setState({
@@ -47,6 +46,13 @@ class NavBar extends Component {
             AnchorEl  : null
         });
       };
+
+      handleLogoutClose = () => {
+        this.setState({
+            AnchorEl  : null
+        })
+        localStorage. clear()
+      }
 
     
     render(){
@@ -86,18 +92,18 @@ class NavBar extends Component {
                                 </Typography>
                             </Grid></>):
                             (<>
-                                <Grid item xs={1}>
-                                <br/>
+                                {/* <Grid item xs={1}>
+                                <br/> */}
                                 {/* <Typography>
                                     <Button variant="outlined" color="white" href = "/home">
                                         Signout
                                     </Button>
                                 </Typography>  */}
-                                </Grid>
-                                <Grid item xs={1}>
+                                {/* </Grid> */}
+                                <Grid item xs={2}>
                                 <br/>
                                 <Typography style = {{marginTop:"5"}} >
-                                    Profile
+                                {localStorage.getItem('user')}
                                     <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} >
                                     <AccountCircleIcon fontSize = "medium"/>
                                     </IconButton>
@@ -111,7 +117,7 @@ class NavBar extends Component {
                                     <MenuItem onClick={this.handleClose}> <Button href = "/signup">Edit Profile </Button></MenuItem>
                                     <MenuItem onClick={this.handleClose}> <Button href = "/sell">Sell a Book</Button></MenuItem>
                                     <MenuItem onClick={this.handleClose}> <Button href = "/buy">Buy a Book</Button></MenuItem>
-                                    <MenuItem onClick={this.handleClose}> <Button href = "/home">Logout</Button></MenuItem>
+                                    <MenuItem onClick={this.handleLogoutClose}> <Button>Logout</Button></MenuItem>
                                 </Menu>
                                 </Typography>
                             </Grid>

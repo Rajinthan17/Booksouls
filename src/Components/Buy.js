@@ -16,6 +16,7 @@ import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
 import SentimentSatisfiedIcon from '@material-ui/icons/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@material-ui/icons/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import Snackbar from '@material-ui/core/Snackbar';
 import axios from 'axios';
 
 
@@ -70,13 +71,15 @@ export default class Buy extends Component{
       constructor(){
         super()
         this.state = {
-          alertMessage : false,
           open : false,
           book:{},
           buyerName:'',
           buyerAddress:'',
           buyerPhoneNum:'',
-          image:[""]
+          image:[""],
+          vertical : 'top',
+          horizontal : 'center',
+          isSucess : false,
         }
         
       }
@@ -109,6 +112,12 @@ export default class Buy extends Component{
         buyerPhoneNum:e.target.value
       })
     }
+    fillAlert = () => {
+      this.setState({snackbaropen:false})
+      if(this.state.isSucess){
+        this.props.history.push("/home");
+      }
+    }
 
       IsAlert =  () =>{
         let pending = {
@@ -117,15 +126,18 @@ export default class Buy extends Component{
           buyerAddress : this.state.buyerAddress,
           buyerPhoneNum : this.state.buyerPhoneNum
         }
-        axios.post('http://localhost:8081/pending',pending)
-        .then((Response) => {
-          console.log(pending)
-          axios.delete('http://localhost:8081/books/'+ this.props.match.params.id)
-        })
-        this.setState ({
-          alertMessage : true,
-          open : false,
-        })
+        if(this.state.buyerAddress && this.state.buyerName && this.state.buyerPhoneNum){
+          axios.post('http://localhost:8081/pending',pending)
+          .then((Response) => {
+            console.log(pending)
+            axios.delete('http://localhost:8081/books/'+ this.props.match.params.id)
+            this.setState({snackbaropen:true,isSucess:true,open : false, message:'We will deliver your book soon..!! — Thank you!'})
+            setTimeout(()=> this.fillAlert(), 3000)
+          })
+        }else {
+          this.setState({snackbaropen:true, message:'Please Fill the Whole Form'})
+          setTimeout(()=> this.fillAlert(), 4000)
+        }
       }
       handleClickOpen = () => {
         this.setState ({
@@ -141,8 +153,24 @@ export default class Buy extends Component{
       
   
     render(){
+      const { vertical, horizontal } = this.state;
       //console.log(this.state.book)
         return(
+          <>
+            <div>
+            <Snackbar open={this.state.snackbaropen} autoHideDuration={3000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+              { this.state.isSucess ? (
+                <Alert severity="success">
+                  {this.state.message}
+                </Alert>
+              ):(
+                <Alert severity="warning">
+                {this.state.message}
+              </Alert>
+              )
+              }
+            </Snackbar>
+          </div>
         <Grid container spacing = {1}  style = {{marginTop:30}}> 
         <Grid item xs={5}>
           <img src = {image3} height = "65%" width = "70%" alt = "Background Books"/>
@@ -231,7 +259,7 @@ export default class Buy extends Component{
                        </FormControl>
                        </Grid>  
                        </Grid> 
-                       {this.state.alertMessage ? 
+                       {/* {this.state.alertMessage ? 
                           (<><br/>
                           <Alert severity="success">We will deliver your book soon..!! — Thank you!</Alert>
                             <Box component="fieldset" borderColor="transparent" > 
@@ -244,7 +272,7 @@ export default class Buy extends Component{
                               />
                             </Box>
                           </>):(null)
-                        }    
+                        }     */}
                    
               </CardContent>
               </Paper>
@@ -252,6 +280,7 @@ export default class Buy extends Component{
         </Grid>
         <Grid item xs={1}/>
       </Grid>
+      </>
         )
     }
 }

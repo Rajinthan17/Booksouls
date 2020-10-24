@@ -1,48 +1,89 @@
 import React,{Component} from 'react';
 import './SignupStyle.css';
-import {Paper,  Grid, TextField, Button} from '@material-ui/core';
+import {Paper,  Grid, TextField, Button,FormControl} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import image4 from "./image4.jpg"
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import axios from 'axios';
+import AuthService from './AuthService';
+import userService from './userService';
 
 export default class Signup extends Component{
     constructor(){
         super()
-        // localStorage.setItem('user',true)
-        // localStorage.removeItem('user')
         this.state = {
             name: "",
             email: "",
             address:"",
+            phone:'',
             password: "",
             repassword: "",
-            nameError: "",
-            emailError: "",
             oldPassword:"",
-            oldPasswordError:"",
-            passwordError: "",
-            repasswordError:"",
-            addressError:"",
             rememberMe: false,
             UpdatePassword : false,
             Books:[]
         }
     }
 
-    reloadUserList = () => {
-        axios.get("http://localhost:8081/books/page")
-        .then((Response) => {
-            console.log(Response.data.data)
-        this.setState({
-            Books:Response.data.data},
-            console.log(this.state.Books))
+    componentDidMount() {
+        ValidatorForm.addValidationRule('isUserName',(value) => {
+            if((this.state.name.length>4)){
+            return true;
+            }
+            return false;
+            })
+        ValidatorForm.addValidationRule('isEmail',(value) => {
+            if(this.state.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) ){
+            return true;
+            }
+            return false;
+            })
+        ValidatorForm.addValidationRule('isAddress',(value) => {
+            if((this.state.address.length>10)){
+            return true;
+            }
+            return false;
+            })
+        ValidatorForm.addValidationRule('isPhone',(value) => {
+            if((this.state.phone.length==10)){
+            return true;
+            }
+            return false;
+            })
+        ValidatorForm.addValidationRule('isPassword',(value) => {
+            if((this.state.password.length>=8) && (this.state.password.length<=16)){
+            return true;
+            }
+            return false;
+            })
 
-        })
+        ValidatorForm.addValidationRule('isOldPassword',(value) => {
+            if((this.state.oldPassword.length>=8) && (this.state.oldPassword.length<=16)){
+            return true;
+            }
+            return false;
+            })
+
+        ValidatorForm.addValidationRule('isRePassword',(value) => {
+            if((this.state.repassword == this.state.password)){
+            return true;
+            }
+            return false;
+            })
+
+        if(localStorage.getItem('user')){
+            userService.getUserById(localStorage.getItem('id'))
+            .then((Response) => {
+                this.setState({
+                    name : Response.data.username,
+                    address : Response.data.address,
+                    phone : Response.data.phoneNum,
+                    email : Response.data.email
+                })
+            })
+        }
+        
     }
-    // componentDidMount() {
-    //     this.reloadUserList();
-    //     console.log(this.state.Books)
-    // }
  
  
 
@@ -61,110 +102,44 @@ export default class Signup extends Component{
         })
     }
 
+    NameValidate = (e) => {
+        this.setState({
+            name : e.target.value
+        })
+    }
+
     AddressValidate = (e) => {
         this.setState ({
             address:e.target.value
         })
-        if(!this.state.address){
-            this.setState ({
-                addressError:"This Field is Required"
-            })
-        }
-        else if (this.state.address.length < 10) {
-            this.setState ({
-                addressError:"Please Fill fully Address"
-            })
-        }
-        else if (this.state.address.length > 20) {
-            this.setState ({
-                addressError:""
-            })
-        }
     }
     EmailValidate = (e) => {
         this.setState ({
             email:e.target.value
         })
-        if(!this.state.email){
-            this.setState ({
-                emailError:"e-mail id Required"
-            })
-        }
-        else if  (this.state.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) ){
-                this.setState ({
-                    emailError:""
-                })
-        }
-        else{
-            this.setState ({
-                emailError:"invalid Email"
-            }) 
-        }
+    }  
+    PhoneValidate = (e) => {
+        this.setState ({
+            phone:e.target.value
+        })
     }  
 
-    PasswordValidate2 = (e) => {
+    oldPasswordValidate = (e) => {
         this.setState ({
             oldPassword:e.target.value
         })
-        if(!this.state.password){
-            this.setState ({
-                oldPasswordError:"Enter the password!"
-            }) 
-          
-        }else if(this.state.password.length < 5 || this.state.password.length >25 ){
-            this.setState ({
-                oldPasswordError:"Password must have 5 to 25 characters"
-            }) 
-        
-        }
-        else{
-            this.setState ({
-                oldPasswordError:""
-            }) 
-        }
     }
 
     PasswordValidate = (e) => {
         this.setState ({
             password:e.target.value
         })
-        if(!this.state.password){
-            this.setState ({
-                passwordError:"Enter the password!"
-            }) 
-          
-        }else if(this.state.password.length < 5 || this.state.password.length >25 ){
-            this.setState ({
-                passwordError:"Password must have 5 to 25 characters"
-            }) 
-        
-        }
-        else{
-            this.setState ({
-                passwordError:""
-            }) 
-        }
     }
 
     RePasswordValidate = (e) => {
         this.setState ({
             repassword:e.target.value
         })
-        if (!this.state.password) {
-            this.setState ({
-                repasswordError:"Reenter the password!"
-            }) 
-        }
-        else if(this.state.password !== this.state.repassword ){
-            this.setState ({
-                repasswordError:"Check the password"
-            }) 
-        }
-        else {
-            this.setState ({
-                repasswordError:""
-            }) 
-        }
     }
 
     // validate = () => {
@@ -176,15 +151,62 @@ export default class Signup extends Component{
 
 
     //------------------------------------------------------------------
+    loginRender = () => {
+        
+        this.props.history.push('/home')
+        window.location.reload()
+    }
+
+    handleUpdate = (event) => {
+        let _user = {
+            email:this.state.email,
+            address:this.state.address,
+            phoneNum : this.state.phone,
+        }
+
+
+        if(localStorage.getItem("user")){
+            if(!this.state.UpdatePassword){
+                    userService.updateUserByUser(localStorage.getItem('id'),_user)
+                    .then((Response) => {
+                        console.log(Response)
+                    })
+            }else{
+                userService.updatePassword(localStorage.getItem('id'),this.state.oldPassword,this.state.password)
+            }
+        }
+    }
+
 
     handleSubmit = (event) =>{
         event.preventDefault();
-        // const isValid = this.validate();
-        // if (isValid){
-            console.log(this.state);
-            
 
-        // }
+        let _user = {
+            username : this.state.name,
+            email:this.state.email,
+            address:this.state.address,
+            phoneNum : this.state.phone,
+            password:this.state.password
+        }
+
+        let loginUser = {
+            username : this.state.name,
+            password:this.state.password
+        }
+       
+        AuthService.signup(_user)
+        .then((Response)=>{
+            AuthService.login(loginUser)
+            .then((Response)=>{
+                console.log(Response)
+                localStorage.setItem('user',Response.data.username)
+                localStorage.setItem('id',Response.data.id)
+                localStorage.setItem('token',Response.data.basicToken)
+                localStorage.setItem('tokenType',Response.data.tokenType)
+                this.loginRender()
+            })
+                
+        })
     };
     render(){
         console.log(this.state.Books)
@@ -198,92 +220,100 @@ export default class Signup extends Component{
                 <Grid item xs = {4} style = {{marginBottom:15}}>
                 <Card style = {{backgroundColor:"#8c8c8c"}}>
                 <Paper style = {{margin:10}}>
-            <form onSubmit = {this.handleSubmit}>
+                <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}onSubmit={this.handleSubmit}>
                 <br/>
                 <h2>Register Your Account</h2>
-                {/* {this.state.Books} */}
-                    <TextField 
-                    Required
-                    name = "name"
-                    autoFocus
-                    variant="outlined"
-                    placeholder = "Username"
-                    helperText ={this.state.nameError? (<sapn style = {{color: "red"}}>{this.state.nameError}</sapn>):("Please Enter Your Name")}
-                    onChange = {this.NameValidate}
-                    onClick = {this.NameValidate} 
+                    <TextValidator 
+                    required='true' 
+                    label="Username" 
+                    variant="outlined" 
+                    helperText="Enter your username" 
+                    validators={['required',"isUserName"]}
+                    onChange={this.NameValidate} 
+                    value={this.state.name}
+                    errorMessages = {["This field is not Empty","Username must be more than 4 characters"]}
                     size="small"
                     style = {{width: 300}}
                     />
 {/* ------------------------------------------------------------------ */}
                 <div>
-                    <TextField 
-                    Required
-                    name = "email"
-                    size="small"
-                    variant="outlined"
-                    placeholder = "Email"
-                    helperText ={this.state.emailError? (<span style = {{color: "red"}}>{this.state.emailError}</span>):("Please Enter Your e-mail")}
+                    <TextValidator 
+                    required='true' 
+                    label="E-Mail" 
+                    variant="outlined" 
+                    helperText="Enter your email" 
+                    validators={['required',"isEmail"]}
+                    errorMessages = {["This field is not Empty","E-Mail must be in E-Mail format"]}
                     value = {this.state.email} 
                     onChange = {this.EmailValidate} 
-                    onClick = {this.EmailValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* --------------------------------------------------------------------------- */}
                 <div>
-                    <TextField 
+                    <TextValidator 
                     Required
-                    name = "Address"
-                    size="small"
-                    variant="outlined"
-                    placeholder = "Address"
-                    helperText ={this.state.addressError? (<span style = {{color: "red"}}>{this.state.addressError}</span>):("Please Enter Your Address")}
+                    required='true' 
+                    label="Address" 
+                    variant="outlined" 
+                    helperText="Enter your Address" 
+                    validators={['required',"isAddress"]}
+                    errorMessages = {["This field is not Empty","Address must be more than 4 characters"]}
                     value = {this.state.address} 
                     onChange = {this.AddressValidate} 
-                    onClick = {this.AddressValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* ------------------------------------------------------------------------------- */}
 
                 <div>
-                <TextField
-                    id="date"
-                    variant="outlined"
-                    type="date"
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="Phone Number" 
+                    variant="outlined" 
+                    helperText="Enter your Phone Number" 
+                    validators={['required',"isPhone"]}
+                    errorMessages = {["This field is not Empty","Phone Number must be in 10 Numbers"]}
+                    value = {this.state.phone} 
+                    onChange = {this.PhoneValidate} 
                     size="small"
-                    helperText = " Please Enter your Date of Birth"
                     style = {{width: 300}}
-                />
+                    />
                 </div>
 
 {/* --------------------------------------------------------------------------- */}
                 <div>
-                    <TextField 
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="Password" 
                     type = 'password'
-                    variant="outlined"
-                    size="small"
-                    name = "password"
-                    placeholder = "password"
-                    helperText ={this.state.passwordError? (<span style = {{color: "red"}}>{this.state.passwordError}</span>):("Please Enter Your Password")}
+                    variant="outlined" 
+                    helperText="Enter your Password" 
+                    validators={['required',"isPassword"]}
+                    errorMessages = {["This field is not Empty","Password must be between 8 & 16 characters"]}
                     value = {this.state.password} 
                     onChange = {this.PasswordValidate} 
-                    onClick = {this.PasswordValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* --------------------------------------------------------------------------- */}
                 <div>
-                    <TextField 
+                    <TextValidator 
+                    Required
+                    required='true' 
+                    label="Password" 
                     type = 'password'
-                    name = "repassword"
-                    size="small"
-                    variant="outlined"
-                    helperText ={this.state.repasswordError? (<span style = {{color: "red"}}>{this.state.repasswordError}</span>):("Please Enter Your Password")}
-                    placeholder = "Reenter the password"
+                    variant="outlined" 
+                    helperText="Enter your Password Again" 
+                    validators={['required',"isRePassword"]}
+                    errorMessages = {["This field is not Empty","Password did not match"]}
                     value = {this.state.repassword} 
                     onChange = {this.RePasswordValidate} 
-                    onClick = {this.RePasswordValidate}
                     style = {{width: 300}}
                     />
                 </div>
@@ -322,7 +352,7 @@ export default class Signup extends Component{
 
                 <span style = {{fontSize: 12}}>Already have an acoount <a href = "/login">login in</a></span>
                 
-            </form>
+            </ValidatorForm>
             </Paper>
             </Card>
             </Grid>
@@ -336,60 +366,68 @@ export default class Signup extends Component{
                 <Grid item xs = {4} style = {{marginBottom:15}}>
                 <Card style = {{backgroundColor:"#8c8c8c"}}>
                 <Paper style = {{margin:10}}>
-            <form onSubmit = {this.handleSubmit}>
+                <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}onSubmit={this.handleUpdate}>
                 <br/>
                 <h2>Edit Your Deatils</h2>
-                    <TextField 
-                    Required
-                    name = "name"
-                    variant="outlined"
-                    placeholder = "Username"
-                    helperText ="Your Username can't to be Change"
-                    value = "Hello"
-                    size="small"
-                    style = {{width: 300}}
-                    />
+                    <TextValidator 
+                        disabled
+                        label="Username" 
+                        variant="outlined" 
+                        helperText="Enter your username" 
+                        validators={['required',"isUserName"]}
+                        onChange={this.NameValidate} 
+                        value={this.state.name}
+                        errorMessages = {["This field is not Empty","Username must be more than 4 characters"]}
+                        size="small"
+                        style = {{width: 300}}
+                        />
 {/* ------------------------------------------------------------------ */}
                 <div>
-                    <TextField 
-                    Required
-                    name = "email"
-                    size="small"
-                    variant="outlined"
-                    placeholder = "Email"
-                    helperText ={this.state.emailError? (<span style = {{color: "red"}}>{this.state.emailError}</span>):("Update Your e-mail if there any changes")}
+                <TextValidator 
+                    required='true' 
+                    label="E-Mail" 
+                    variant="outlined" 
+                    helperText="Enter your email" 
+                    validators={['required',"isEmail"]}
+                    errorMessages = {["This field is not Empty","E-Mail must be in E-Mail format"]}
                     value = {this.state.email} 
                     onChange = {this.EmailValidate} 
-                    onClick = {this.EmailValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* --------------------------------------------------------------------------- */}
                 <div>
-                    <TextField 
+                <TextValidator 
                     Required
-                    name = "Address"
-                    size="small"
-                    variant="outlined"
-                    placeholder = "Address"
-                    helperText ={this.state.addressError? (<span style = {{color: "red"}}>{this.state.addressError}</span>):("Update Your Address if there any changes")}
+                    required='true' 
+                    label="Address" 
+                    variant="outlined" 
+                    helperText="Enter your Address" 
+                    validators={['required',"isAddress"]}
+                    errorMessages = {["This field is not Empty","Address must be more than 4 characters"]}
                     value = {this.state.address} 
                     onChange = {this.AddressValidate} 
-                    onClick = {this.AddressValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* ------------------------------------------------------------------------------- */}
 
                 <div>
-                <TextField
-                    id="date"
-                    variant="outlined"
-                    type="date"
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="Phone Number" 
+                    variant="outlined" 
+                    helperText="Enter your Phone Number" 
+                    validators={['required',"isPhone"]}
+                    errorMessages = {["This field is not Empty","Phone Number must be in 10 Numbers"]}
+                    value = {this.state.phone} 
+                    onChange = {this.PhoneValidate} 
                     size="small"
-                    helperText = "Update your Date of Birth if there any changes"
                     style = {{width: 300}}
-                />
+                    />
                 </div>
                 <div style = {{color:"  #7b7c7e  "}}>
                         <input
@@ -400,7 +438,7 @@ export default class Signup extends Component{
                           type="file"
                         />
                         <br/>
-                        <span style = {{fontSize:12}}>If you need Update your Profile picture </span>
+                        <span style = {{fontSize:12}}>Update your Profile picture </span>
                 </div>
 
 
@@ -412,12 +450,13 @@ export default class Signup extends Component{
                 <div>
                     <Button
                     type = 'submit'
+                    onClick = {this.handleUpdate}
                     >
                         Update
                     </Button>
 {/* ----------------------------------------------------------------------- */}
                 </div>  
-            </form>
+            </ValidatorForm>
             </Paper>
             </Card>
             </Grid>
@@ -431,50 +470,55 @@ export default class Signup extends Component{
                 <Grid item xs = {4} style = {{marginTop:60}}>
                 <Card style = {{backgroundColor:"#8c8c8c"}}>
                 <Paper style = {{margin:10}}>
-            <form onSubmit = {this.handleSubmit}>
+                <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}onSubmit={this.handleUpdate}>
                 <br/>
                 <h2>Edit Your Password</h2>
                 <div>
-                    <TextField 
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="Old Password" 
                     type = 'password'
-                    variant="outlined"
-                    size="small"
-                    name = "Old password"
-                    placeholder = "Old password"
-                    helperText ={this.state.oldPasswordError? (<span style = {{color: "red"}}>{this.state.oldPasswordError}</span>):("Please Enter Your Old Password")}
+                    variant="outlined" 
+                    helperText="Enter your Password" 
+                    validators={['required',"isOldPassword"]}
+                    errorMessages = {["This field is not Empty","Password must be between 8 & 16 characters"]}
                     value = {this.state.oldPassword} 
-                    onChange = {this.PasswordValidate2} 
-                    onClick = {this.PasswordValidate2} 
+                    onChange = {this.oldPasswordValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* --------------------------------------------------------------------------- */}
                 <div>
-                    <TextField 
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="New Password" 
                     type = 'password'
-                    variant="outlined"
-                    size="small"
-                    name = "New Password"
-                    placeholder = "New Password"
-                    helperText ={this.state.passwordError? (<span style = {{color: "red"}}>{this.state.passwordError}</span>):("Please Enter Your New Password")}
+                    variant="outlined" 
+                    helperText="Enter your new Password" 
+                    validators={['required',"isPassword"]}
+                    errorMessages = {["This field is not Empty","Password must be between 8 & 16 characters"]}
                     value = {this.state.password} 
                     onChange = {this.PasswordValidate} 
-                    onClick = {this.PasswordValidate} 
+                    size="small"
                     style = {{width: 300}}
                     />
                 </div>
 {/* --------------------------------------------------------------------------- */}
                 <div>
-                    <TextField 
+                <TextValidator 
+                    Required
+                    required='true' 
+                    label="Password" 
                     type = 'password'
-                    name = "repassword"
-                    size="small"
-                    variant="outlined"
-                    helperText ={this.state.repasswordError? (<span style = {{color: "red"}}>{this.state.repasswordError}</span>):("Please Enter Your Password")}
-                    placeholder = "Reenter the password"
+                    variant="outlined" 
+                    helperText="Enter your Password Again" 
+                    validators={['required',"isRePassword"]}
+                    errorMessages = {["This field is not Empty","Password did not match"]}
                     value = {this.state.repassword} 
                     onChange = {this.RePasswordValidate} 
-                    onClick = {this.RePasswordValidate}
                     style = {{width: 300}}
                     />
                 </div>
@@ -482,12 +526,13 @@ export default class Signup extends Component{
                 <div>
                     <Button
                     type = 'submit'
+                    onClick = {this.handleUpdate}
                     >
                         Update
                     </Button>
 {/* ----------------------------------------------------------------------- */}
                 </div>  
-            </form>
+            </ValidatorForm>
             </Paper>
             </Card>
             </Grid>

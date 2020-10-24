@@ -14,6 +14,8 @@ import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
 
 
 const useStyles = makeStyles({
@@ -105,8 +107,15 @@ export default function BookDetails(props) {
   const [searchString, setSearchString]= React.useState('');
   const [page, setPage] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  const [snackbaropen, setSnackbaropen] = React.useState(false);
+  const [message, setMessage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [state, setState] = React.useState({
+    vertical: 'top',
+    horizontal: 'center',
+  });
 
+  const { vertical, horizontal } = state;
   // const [id , setId] = React.useState();
   // var books = []
   // var id = 8
@@ -116,9 +125,18 @@ export default function BookDetails(props) {
     setSearchString(e.target.value)
   }
 
+  const fillAlert = () => {
+    window.location.reload()
+  }
+
   const deleteBook = (deleteId) => {
     axios.delete('http://localhost:8081/books/' + deleteId)
-    window.location.reload()
+    .then((Response) => {
+      setMessage('Book Deleted Successfully')
+      setSnackbaropen(true)
+      //setState({snackbaropen:true, message:'Book Deleted Successfully'})
+      setTimeout(()=> fillAlert(), 3000)
+    })
   }
 
   const serachData = () => {
@@ -221,6 +239,12 @@ export default function BookDetails(props) {
     }
   
   return (
+    <>
+    <Snackbar open={snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+                <Alert severity="error">
+                  {message}
+                </Alert>
+    </Snackbar>
       <div >
     <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
       <Paper className = {classes.paper}>
@@ -276,7 +300,7 @@ export default function BookDetails(props) {
               
               <TableCell>
               <IconButton
-              onClick={() => {if(window.confirm('Delete the item?')){deleteBook(row.id)}}}
+              onClick={() => deleteBook(row.id)}
               //onClick = {() => deleteBook(row.id)}
               // onClick = {() => window.location.reload()}
               >
@@ -338,5 +362,6 @@ export default function BookDetails(props) {
       </Paper>
     </Grid>
     </div>
+    </>
   );
 }

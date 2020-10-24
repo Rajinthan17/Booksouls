@@ -6,6 +6,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import image5 from "./image5.png"
+import Snackbar from '@material-ui/core/Snackbar';
 import axios from 'axios';
 
 const style={
@@ -30,6 +31,8 @@ const style={
 
 export default class Sell extends Component{
   constructor (){
+    const vertical = 'top'
+    const horizontal = 'center'
     super()
     this.state = {
       edit : false,
@@ -42,11 +45,14 @@ export default class Sell extends Component{
       usage : '',
       sellerId : '',
       //selectedFile:[],
-      image : []
-
+      image : [],
+      vertical : 'top',
+      horizontal : 'center',
+      isSucess : false,
     }
     // localStorage.setItem('user',true)
       // localStorage.removeItem('user')
+      
   }
 
   BookNameChange = (e) => {
@@ -142,12 +148,19 @@ export default class Sell extends Component{
     // });
 };
 
+fillAlert = () => {
+  this.setState({snackbaropen:false})
+  if(this.state.isSucess){
+    this.props.history.push("/home");
+  }
+}
+
 
   addBook = (e) => {
     //e.preventDefault()
-    const formData = new FormData();
-    formData.append('file', this.state.selectedFile);
-    console.log(formData)
+    // const formData = new FormData();
+    // formData.append('file', this.state.selectedFile);
+    // console.log(formData)
     let book = {
       name : this.state.name,
       authorName : this.state.authorName,
@@ -159,20 +172,43 @@ export default class Sell extends Component{
       usage : this.state.usage,
       sellerId : this.state.sellerId
     }
-    axios.post('http://localhost:8081/books',book)
-    .then((Resposne) => {
-      console.log(Response)
-      //this.props.history.push("/home");
-      // window.location.push('/admin')
-    })
-    console.log(book)
+    if(this.state.name && this.state.authorName && this.state.description && this.state.category
+      && this.state.isbNumber && this.state.price && this.state.image && this.state.usage){
+      axios.post('http://localhost:8081/books',book)
+      .then((Resposne) => {
+        console.log(Response)
+        this.setState({snackbaropen:true,isSucess:true, message:'Book Added Successfully'})
+        setTimeout(()=> this.fillAlert(), 3000)
+        //this.props.history.push("/home");
+        // window.location.push('/admin')
+      })
+      console.log(book)
+    }else {
+      this.setState({snackbaropen:true, message:'Please Fill the Whole Form'})
+      setTimeout(()=> this.fillAlert(), 4000)
+    }
   }
 
     render(){
+      const { vertical, horizontal } = this.state;
       console.log(this.state.image)
         return(
-          
-          localStorage.getItem('user') ?(
+          <>
+          <div>
+            <Snackbar open={this.state.snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+              { this.state.isSucess ? (
+                <Alert severity="success">
+                  {this.state.message}
+                </Alert>
+              ):(
+                <Alert severity="warning">
+                {this.state.message}
+              </Alert>
+              )
+              }
+            </Snackbar>
+          </div>
+          {localStorage.getItem('user') ?(
           <Grid container>
               <Grid item xs={1}/>
               <Grid item xs={5} style = {{marginTop:60}}>
@@ -454,7 +490,9 @@ export default class Sell extends Component{
               <Grid item xs={3}/>
               </Grid>
           )
-      
+          }
+          </>
         )
+        
     }
 }

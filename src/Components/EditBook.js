@@ -5,6 +5,8 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import InputLabel from '@material-ui/core/InputLabel';
 import image5 from "./image5.png"
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 import axios from 'axios';
 
 const style={
@@ -39,7 +41,10 @@ export default class EditBook extends Component{
       price: '',
       usage : '',
       sellerId : '',
-      image:[]
+      image:[],
+      vertical : 'top',
+      horizontal : 'center',
+      isSucess : false,
     }
     //console.log(localStorage.getItem('bookId'))
     // console.log(this.state.id)
@@ -115,7 +120,7 @@ onFileChangeHandler = (e) => {
     //   id:localStorage.getItem('bookId')
     // })
     //e.preventDefault()
-    console.log("ffffffffffffffffffffffffff")
+    //console.log("ffffffffffffffffffffffffff")
     let book = {
       name : this.state.name,
       authorName : this.state.authorName,
@@ -127,17 +132,44 @@ onFileChangeHandler = (e) => {
       usage : this.state.usage,
       sellerId : this.state.sellerId
     }
-    axios.put('http://localhost:8081/books/' + this.props.match.params.id,book)
-      .then((Resposne) => {
-        console.log(Response)
-        this.props.history.push("/BookDetails");
-        // window.location.push('/admin')
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-    //console.log(book)
+    if(this.state.name && this.state.authorName && this.state.description && this.state.category 
+      && this.state.isbNumber && this.state.price && this.state.image && this.state.usage){
+      axios.put('http://localhost:8081/books/' + this.props.match.params.id,book)
+        .then((Resposne) => {
+          console.log(Response)
+          this.setState({snackbaropen:true,isSucess:true, message:'Book Update Successfully'})
+          setTimeout(()=> this.fillAlert(), 3000)
+          //this.props.history.push("/BookDetails");
+        })
+        .catch((error) => {
+          console.log(error)
+        })
+    }else {
+      this.setState({snackbaropen:true, message:'Please Fill the Form Properly'})
+      setTimeout(()=> this.fillAlert(), 4000)
+    }
   }
+
+  handleReset = () => {
+    this.setState({
+      name : "",
+      authorName : "",
+      description : "",
+      category : "",
+      isbNumber : "",
+      price : "",
+      image:"",
+      usage : "",
+    })
+  }
+
+  fillAlert = () => {
+    this.setState({snackbaropen:false})
+    if(this.state.isSucess){
+      this.props.history.push("/BookDetails");
+    }
+  }
+
   componentDidMount () {
     // console.log(this.props.match.params.id)
     this.setState({
@@ -160,9 +192,24 @@ onFileChangeHandler = (e) => {
     })
 }
     render(){
+      const { vertical, horizontal } = this.state;
       //console.log(this.state.image)
         return(
-          
+          <>
+          <div>
+            <Snackbar open={this.state.snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+              { this.state.isSucess ? (
+                <Alert severity="success">
+                  {this.state.message}
+                </Alert>
+              ):(
+                <Alert severity="warning">
+                {this.state.message}
+              </Alert>
+              )
+              }
+            </Snackbar>
+          </div>
           
           <Grid container>
               <Grid item xs={1}/>
@@ -359,7 +406,7 @@ onFileChangeHandler = (e) => {
                                fullWidth
                                variant="contained"
                                color="primary"
-                               onClick={() => {if(window.confirm('Update the Book?')){this.updateUser()}}}
+                               onClick={() => this.updateUser()}
                                //onClick={this.updateUser}
                            >
                              Update
@@ -378,6 +425,7 @@ onFileChangeHandler = (e) => {
                                fullWidth
                                variant="contained"
                                color="primary"
+                               onClick = {() => this.handleReset()}
                           >
                          RESET
                           </Button>
@@ -413,7 +461,7 @@ onFileChangeHandler = (e) => {
         </Grid>
         <Grid item xs={4}/>
       </Grid>
-
+      </>
       
         )
     }
