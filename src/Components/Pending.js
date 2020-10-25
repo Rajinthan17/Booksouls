@@ -97,17 +97,6 @@ function TablePaginationActions(props) {
 
 
 
-function createData(id, bookname, BuyerName, BuyerAddress, BuyerPhoneNo) {
-  return {id, bookname, BuyerName, BuyerAddress, BuyerPhoneNo};
-}
-
-const rows = [
-  createData('id1', 'bookname', 'Buyer Name', 'Address', 'Phno'),
-  createData('id2', 'bookname',  'Buyer Name', 'Address', 'Phno'),
-  createData('id2', 'bookname',  'Buyer Name', 'Address', 'Phno'),
-
-];
-
 export default function Pending() {
   const classes = useStyles();
   const [pendings, setPendings] = React.useState([]);
@@ -122,7 +111,7 @@ export default function Pending() {
   }
 
   const deletePending = (deleteId) => {
-    axios.delete('http://localhost:8081/pending/' + deleteId)
+    axios.delete('http://localhost:8081/pending/' + deleteId, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
     window.location.reload()
   }
 
@@ -130,7 +119,7 @@ export default function Pending() {
   const serachData = () => {
     setPage (0)
     if(searchString == ''){
-      axios.get("http://localhost:8081/pending/page")
+      axios.get("http://localhost:8081/pending/page", {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
       .then((Response) => {
         setCount (Response.data.Total_No_Of_Elements)
         console.log(count)
@@ -138,7 +127,7 @@ export default function Pending() {
       console.log(pendings)
     })
     }else{
-      axios.get("http://localhost:8081/pending/page/serachedPages?serched="+searchString)
+      axios.get("http://localhost:8081/pending/page/serachedPages?serched="+searchString, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
       .then((Response) => {
         setCount (Response.data.Total_No_Of_Elements)
         console.log(count)
@@ -152,7 +141,7 @@ export default function Pending() {
     useEffect(() => {
       // setBooks(["Hello"])
       // console.log("books");
-      axios.get("http://localhost:8081/pending/page?pageNo="+page)
+      axios.get("http://localhost:8081/pending/page?pageNo="+page, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
         .then((Response) => {
         console.log(Response.data.Total_No_Of_Elements)
         setCount (Response.data.Total_No_Of_Elements)
@@ -169,7 +158,7 @@ export default function Pending() {
     const clearText = (e) => {
       setPage (0)
       setSearchString ('')
-      axios.get("http://localhost:8081/pending/page?pageNo="+page)
+      axios.get("http://localhost:8081/pending/page?pageNo="+page, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
         .then((Response) => {
         console.log(Response.data.Total_No_Of_Elements)
         setCount (Response.data.Total_No_Of_Elements)
@@ -185,7 +174,7 @@ export default function Pending() {
     const handleChangePage = (event, newPage) => {
       setPage(newPage);
       if(searchString == ''){
-      axios.get("http://localhost:8081/pending/page?pageNo="+newPage)
+      axios.get("http://localhost:8081/pending/page?pageNo="+newPage, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
       .then((Response) => {
         //console.log(Response.data.Total_No_Of_Elements)
         // setCount (Response.data.Total_No_Of_Elements)
@@ -197,7 +186,7 @@ export default function Pending() {
         
       })
     }else{
-      axios.get("http://localhost:8081/pending/page/serachedPages?serched="+searchString + "&pageNo="+ newPage)
+      axios.get("http://localhost:8081/pending/page/serachedPages?serched="+searchString + "&pageNo="+ newPage, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
       .then((Response) => {
         // console.log(Response.data.Total_No_Of_Elements)
         // setCount (Response.data.Total_No_Of_Elements)

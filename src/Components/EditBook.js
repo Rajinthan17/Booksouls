@@ -134,7 +134,7 @@ onFileChangeHandler = (e) => {
     }
     if(this.state.name && this.state.authorName && this.state.description && this.state.category 
       && this.state.isbNumber && this.state.price && this.state.image && this.state.usage){
-      axios.put('http://localhost:8081/books/' + this.props.match.params.id,book)
+      axios.put('http://localhost:8081/books/' + this.props.match.params.id,book, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
         .then((Resposne) => {
           console.log(Response)
           this.setState({snackbaropen:true,isSucess:true, message:'Book Update Successfully'})

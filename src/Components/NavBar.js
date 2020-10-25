@@ -71,7 +71,19 @@ class NavBar extends Component {
                         </IconButton>
                         </Tooltip>
                         </Grid>
-                        <Grid item xs={4}/>
+                        <Grid item xs={2}>
+                             {localStorage.getItem('role') == "ROLE_ADMIN"? (
+                                 <>
+                                  <br/>
+                                  <Typography style = {{marginTop:"5"}}>
+                                      <Button variant="outlined" color="white" href = "/admin" style = {{width:"100%"}}>
+                                          Admin Pannel
+                                      </Button>
+                                  </Typography>
+                                </>
+                             ):(null)}
+                        </Grid>
+                        <Grid item xs={2}/>
                         <Grid item xs = {4}>
                         </Grid>
                         {!localStorage.getItem('user') ? (

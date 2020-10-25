@@ -18,7 +18,7 @@ class userService {
 
     updatePassword(id,oldPassword,newPassword){
         return axios.put(USER_API_BASE_URL + "password/" + id + "?oldPassword=" + oldPassword + "&newPassword=" + newPassword,{
-            headers : {"Authorization" : "Basic cmFqaW50aGFuOjEyMzQ1Njc4"}
+            headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}
         })
     }
 
@@ -48,6 +48,14 @@ class userService {
         return axios.delete(USER_API_BASE_URL + id ,{
             headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}
         })
+    }
+
+    emailSent (email) {
+        return axios.get("http://localhost:8081/sendmail/forgot?username=" + email)
+    }
+
+    forgotPasswordUpdate(username , password){
+        return axios.put("http://localhost:8081/user/forgot/password?username=" + username+ "&newPassword=" + password)
     }
 
 }

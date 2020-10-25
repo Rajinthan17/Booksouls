@@ -3,6 +3,7 @@ import {Paper, Grid, TextField, Button} from '@material-ui/core';
 import './LoginStyle.css';
 import image2 from './image2.jpg'
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import userService from "./userService";
 import AuthService from './AuthService';
 
 
@@ -17,11 +18,14 @@ export default class Login extends Component{
             codeSubmit : false,
             code : "",
             updatePassword:false,
+            otp:'',
         }
     }
-    handelUpdatePassword = () => {
-        this.setState({
-            updatePassword:true
+    handelUpdatePassword = (e) => {
+        e.preventDefault()
+        userService.forgotPasswordUpdate(this.state.username , this.state.password)
+        .then((Response)=> {
+            console.log(Response)
         })
     }
     fogotChange = () => {
@@ -29,10 +33,25 @@ export default class Login extends Component{
             fogot : true
         })
     }
+
+    Varification = () =>{
+        if(this.state.otp == this.state.code){
+            this.setState({
+                updatePassword:true
+            })
+        }
+    }
+
     isCodeSubmit = () => {
-        this.setState({
-            codeSubmit : true
+        userService.emailSent(this.state.username)
+        .then((Response) => {
+            console.log(Response)
+            this.setState({
+                otp : Response.data,
+                codeSubmit : true
+            })
         })
+            
     }
     CodeChange = (e) => {
         this.setState({
@@ -75,6 +94,7 @@ export default class Login extends Component{
                 localStorage.setItem('id',Response.data.id)
                 localStorage.setItem('token',Response.data.basicToken)
                 localStorage.setItem('tokenType',Response.data.tokenType)
+                localStorage.setItem('role',Response.data.roles)
                 //console.log(localStorage.getItem('user'))
                 // this.props.history.push('/home')
                 // window.location.reload()
@@ -188,6 +208,7 @@ export default class Login extends Component{
                     helperText = {this.state.emailError?(<span style = {{color: "red"}}>{this.state.emailError}</span>):("Please Enter Your Username/E-mail")}
                     label = "Username/E-mail"
                     variant="outlined"
+                    value = {this.state.username}
                     onChange = {this.UserNameOrEmail}
                     onChange = {this.UserNameValidate}
                     />
@@ -213,7 +234,7 @@ export default class Login extends Component{
                 </Grid>
                 <Grid item xs={4} style = {{backgroundColor:"#8c8c8c"}}>
                     <Paper style = {{padding : 30}}>
-                    <form onSubmit = {this.handleSubmit}>
+                    <form onSubmit = {this.Varification}>
                         <div>
                             <h1>
                                 Varification 
@@ -226,6 +247,7 @@ export default class Login extends Component{
                     variant="outlined"
                     placeholder = "code"
                     helperText = "Enter Your varification Code"
+                    value = {this.state.code}
                     onChange = {this.CodeChange}
                     />
                     <br/><br/>
@@ -233,7 +255,7 @@ export default class Login extends Component{
                 <Button
                     size = 'large'
                     style = {{backgroundColor: '#8c8c8c'}}
-                    onClick = {this.handelUpdatePassword}
+                    onClick = {this.Varification}
                     >
                         Submit
                     </Button>
@@ -293,8 +315,7 @@ export default class Login extends Component{
                 <Button
                     size = 'large'
                     style = {{backgroundColor: '#8c8c8c'}}
-                    href = "/home"
-                    // onClick={alert("Hello World!")}
+                    onClick = {this.handelUpdatePassword}
                     >
                         Update
                     </Button>

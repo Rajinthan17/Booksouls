@@ -74,6 +74,7 @@ export default class Signup extends Component{
         if(localStorage.getItem('user')){
             userService.getUserById(localStorage.getItem('id'))
             .then((Response) => {
+                console.log(Response)
                 this.setState({
                     name : Response.data.username,
                     address : Response.data.address,
@@ -173,6 +174,10 @@ export default class Signup extends Component{
                     })
             }else{
                 userService.updatePassword(localStorage.getItem('id'),this.state.oldPassword,this.state.password)
+                .then((Response) => {
+                    console.log(Response)
+                    localStorage.setItem('role',Response.data.passwordChangeToken)
+                })
             }
         }
     }

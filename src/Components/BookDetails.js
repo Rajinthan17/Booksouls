@@ -130,7 +130,7 @@ export default function BookDetails(props) {
   }
 
   const deleteBook = (deleteId) => {
-    axios.delete('http://localhost:8081/books/' + deleteId)
+    axios.delete('http://localhost:8081/books/' + deleteId,{headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
     .then((Response) => {
       setMessage('Book Deleted Successfully')
       setSnackbaropen(true)

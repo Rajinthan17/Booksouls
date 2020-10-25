@@ -3,6 +3,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 
 
 
@@ -10,6 +11,7 @@ import Button from '@material-ui/core/Button';
 function Admin(){
     return(
         <>
+        {localStorage.getItem('role') == "ROLE_ADMIN" ?(
         <Grid container spacing={1} style = {{fontFamily:"monospace"}}>
                 <Grid item xs = {2}/>
                 <Grid item xs = {8} style ={{margin : "5%"}}>
@@ -53,6 +55,25 @@ function Admin(){
                 </Grid>
                 <Grid item xs = {2}/>
         </Grid>
+        ):(
+            <Grid container spacing = {1} >
+              <Grid item xs={3}/>
+              
+              <Grid item xs={6} style={{marginTop:"12%"}}>
+              <Card style = {{backgroundColor:"#8c8c8c"}} >
+                <Paper style={{margin:10}}>
+                  <div style = {{padding:20}}>
+                  <Alert variant="outlined" severity="info">
+                    You have to login with Admin Authorization — Login first!
+                  </Alert>
+                  </div>
+                </Paper>
+              </Card>
+              </Grid>
+              <Grid item xs={3}/>
+              </Grid>
+          )
+          }
         </>
     )
 }
