@@ -35,7 +35,7 @@ function Admin(){
                                 <Card style = {{backgroundColor:"#c3cacb"}}>
                                     <h3>Manage Users</h3>
                                     <br/>
-                                    <Button align = "right" href = "/signup">Add user</Button>
+                                    <Button align = "right" href = "/AddUser">Add user</Button>
                                     <Button align = "left" href = "/userDetails">View Users</Button>
                                 </Card>
                             </Grid>

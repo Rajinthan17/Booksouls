@@ -8,6 +8,7 @@ import { Style } from '@material-ui/icons';
 import SaveIcon from '@material-ui/icons/Save';
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -48,7 +49,11 @@ export default class AddUser extends Component {
       email: "",
       address:"",
       phone:'',
-      role : 'user'
+      password:'',
+      role : 'user',
+      vertical : 'top',
+      horizontal : 'center',
+      isSucess : false,
     }
   }
 
@@ -95,35 +100,70 @@ RePasswordValidate = (e) => {
   })
 }
 
-save = () => {
-  if(this.props.match.params.id){
-    let _user = {
-      email : this.state.email,
-      address : this.state.address,
-      phoneNum : this.state.phone,
-      updateroles : [this.state.role]
-    }
+handleReset = () => {
+  this.setState({
+    name: "",
+    email: "",
+    address:"",
+    phone:'',
+    password:'',
+    repassword:'',
+  })
+}
 
-    userService.updateUserByAdmin(this.props.match.params.id,_user)
-    .then((Response) => {
-      console.log(Response)
-    })
-  }else{
-    let _user = {
-      username : this.state.name,
-      email : this.state.email,
-      address : this.state.address,
-      phoneNum : this.state.phone,
-      password : this.state.password,
-      roles : [this.state.role]
-    }
-
-    userService.createUser(_user)
-    .then((Response) => {
-      console.log(Response)
-    })
+fillAlert = () => {
+  this.setState({snackbaropen:false})
+  if(this.state.isSucess){
+    this.props.history.push("/userDetails");
   }
 }
+
+save = () => {
+    if(this.props.match.params.id){
+      if(this.state.name.length>4 && this.state.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) &&
+      this.state.address.length>10 && this.state.phone.length==10){
+        let _user = {
+          email : this.state.email,
+          address : this.state.address,
+          phoneNum : this.state.phone,
+          updateroles : [this.state.role]
+        }
+
+        userService.updateUserByAdmin(this.props.match.params.id,_user)
+        .then((Response) => {
+          console.log(Response)
+          this.setState({snackbaropen:true,isSucess:true, message:'User Update Successfully'})
+            setTimeout(()=> this.fillAlert(), 3000)
+        })
+      }else {
+        this.setState({snackbaropen:true, message:'Please Fill the Form Correctly'})
+        setTimeout(()=> this.fillAlert(), 4000)
+      }
+    }else{
+      if(this.state.name.length>4 && this.state.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) &&
+      this.state.address.length>10 && this.state.phone.length==10 && this.state.password.length>=8 && this.state.password.length<=16 && this.state.repassword == this.state.password){
+        let _user = {
+          username : this.state.name,
+          email : this.state.email,
+          address : this.state.address,
+          phoneNum : this.state.phone,
+          password : this.state.password,
+          roles : [this.state.role]
+        }
+
+        userService.createUser(_user)
+        .then((Response) => {
+          console.log(Response)
+          this.setState({snackbaropen:true,isSucess:true, message:'User Added Successfully'})
+            setTimeout(()=> this.fillAlert(), 3000)
+          })
+    }else{
+      this.setState({snackbaropen:true, message:'Please Fill the Form Correctly'})
+        setTimeout(()=> this.fillAlert(), 4000)
+    }
+  }
+}
+
 
 
 
@@ -188,7 +228,21 @@ componentDidMount() {
 
 
   render(){
+    const { vertical, horizontal } = this.state;
       return(
+        <>
+        <Snackbar open={this.state.snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+              { this.state.isSucess ? (
+                <Alert severity="success">
+                  {this.state.message}
+                </Alert>
+              ):(
+                <Alert severity="warning">
+                {this.state.message}
+              </Alert>
+              )
+              }
+            </Snackbar>
           <Grid container>
             <Grid item xs={2}/>
             <Grid item xs={8}>
@@ -302,7 +356,7 @@ componentDidMount() {
                               label="Password" 
                               type = 'password'
                               variant="outlined" 
-                              helperText="Enter your Password" 
+                              helperText="Enter your Password " 
                               validators={['required',"isPassword"]}
                               errorMessages = {["This field is not Empty","Password must be between 8 & 16 characters"]}
                               value = {this.state.password} 
@@ -381,6 +435,7 @@ componentDidMount() {
                                fullWidth
                                variant="contained"
                                color="primary"
+                               onClick = {() => this.handleReset()}
                            >
                              RESET
                           </Button>
@@ -412,6 +467,7 @@ componentDidMount() {
             </Grid>
             <Grid item xs={2}/>
           </Grid>
+          </>
       )
   }
 }

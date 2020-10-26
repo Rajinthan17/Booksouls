@@ -43,8 +43,6 @@ export default class Sell extends Component{
       isbNumber : '',
       price: '',
       usage : '',
-      sellerId : '',
-      //selectedFile:[],
       image : [],
       vertical : 'top',
       horizontal : 'center',
@@ -170,7 +168,7 @@ fillAlert = () => {
       price : this.state.price,
       image:this.state.image,
       usage : this.state.usage,
-      sellerId : this.state.sellerId
+      sellerId : localStorage.getItem('id')
     }
     if(this.state.name && this.state.authorName && this.state.description && this.state.category
       && this.state.isbNumber && this.state.price && this.state.image && this.state.usage){

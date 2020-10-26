@@ -185,10 +185,17 @@ const handleChangePage = (event, newPage) => {
   }
 }
 
+const fillAlert = () => {
+  window.location.reload()
+}
+
 const deleteUser = (id) => {
   userService.deleteUser(id)
   .then((Response)=> {
     console.log(Response)
+    setSnackbaropen(true)
+    setMessage("User Deleted Sucessfully")
+    setTimeout(()=> fillAlert(), 3000)
   })
 }
   
@@ -206,6 +213,11 @@ const deleteUser = (id) => {
   
   return (
       <div>
+       <Snackbar open={snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+                <Alert severity="error">
+                  {message}
+                </Alert>
+    </Snackbar>
     <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
       <Paper className = {classes.paper}>
         <h1>User Details</h1>

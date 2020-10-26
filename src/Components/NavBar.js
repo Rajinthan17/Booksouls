@@ -7,11 +7,12 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Logo from './Logo.png';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ArrowDropDownCircleIcon from '@material-ui/icons/ArrowDropDownCircle';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Avatar from '@material-ui/core/Avatar';
 import BuySellHome from './BuySellHome';
 import AllBookBuy from './AllBooksBuy';
 import Login from './Login';
@@ -48,6 +49,7 @@ class NavBar extends Component {
         });
       };
 
+
       handleLogoutClose = () => {
         this.setState({
             AnchorEl  : null
@@ -83,9 +85,7 @@ class NavBar extends Component {
                                 </>
                              ):(null)}
                         </Grid>
-                        <Grid item xs={2}/>
-                        <Grid item xs = {4}>
-                        </Grid>
+                        <Grid item xs={6}/>
                         {!localStorage.getItem('user') ? (
                             <>
                             <Grid item xs={1}>
@@ -105,20 +105,15 @@ class NavBar extends Component {
                                 </Typography>
                             </Grid></>):
                             (<>
-                                {/* <Grid item xs={1}>
-                                <br/> */}
-                                {/* <Typography>
-                                    <Button variant="outlined" color="white" href = "/home">
-                                        Signout
-                                    </Button>
-                                </Typography>  */}
-                                {/* </Grid> */}
+                                
                                 <Grid item xs={2}>
-                                <br/>
-                                <Typography style = {{marginTop:"5"}} >
-                                {localStorage.getItem('user')}
+                                    <div>
+                                <Avatar size = 'small' alt="Remy Sharp" src={localStorage.getItem('image')} style = {{marginTop:20}}/>
+                                
+                                <b>{localStorage.getItem('user')}</b>
+                                
                                     <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} >
-                                    <AccountCircleIcon fontSize = "medium"/>
+                                    <ArrowDropDownCircleIcon fontSize = "small"/>
                                     </IconButton>
                                     <Menu
                                     id="simple-menu"
@@ -130,9 +125,9 @@ class NavBar extends Component {
                                     <MenuItem onClick={this.handleClose}> <Button href = "/signup">Edit Profile </Button></MenuItem>
                                     <MenuItem onClick={this.handleClose}> <Button href = "/sell">Sell a Book</Button></MenuItem>
                                     <MenuItem onClick={this.handleClose}> <Button href = "/buy">Buy a Book</Button></MenuItem>
-                                    <MenuItem onClick={this.handleLogoutClose}> <Button>Logout</Button></MenuItem>
+                                    <MenuItem onClick={this.handleLogoutClose}> <Button href = '/login'>Logout</Button></MenuItem>
                                 </Menu>
-                                </Typography>
+                                </div>
                             </Grid>
                             
                             </>)}

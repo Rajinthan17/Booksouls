@@ -17,7 +17,7 @@ class userService {
     }
 
     updatePassword(id,oldPassword,newPassword){
-        return axios.put(USER_API_BASE_URL + "password/" + id + "?oldPassword=" + oldPassword + "&newPassword=" + newPassword,{
+        return axios.put(USER_API_BASE_URL + "password/" + id + "?oldPassword=" + oldPassword + "&newPassword=" + newPassword,'',{
             headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}
         })
     }

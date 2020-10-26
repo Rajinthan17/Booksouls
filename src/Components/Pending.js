@@ -13,6 +13,9 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
 import axios from 'axios';
+import Snackbar from '@material-ui/core/Snackbar';
+import Alert from '@material-ui/lab/Alert';
+
 
 
 const useStyles = makeStyles({
@@ -104,15 +107,31 @@ export default function Pending() {
   const [page, setPage] = React.useState(0);
   const [count, setCount] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [snackbaropen, setSnackbaropen] = React.useState(false);
+  const [message, setMessage] = React.useState(0);
+  const [state, setState] = React.useState({
+    vertical: 'top',
+    horizontal: 'center',
+  });
+
+  const { vertical, horizontal } = state;
   
   const searchChange = (e) => {
     console.log(e.target.value)
     setSearchString(e.target.value)
   }
 
+  const fillAlert = () => {
+    window.location.reload()
+  }
+
   const deletePending = (deleteId) => {
     axios.delete('http://localhost:8081/pending/' + deleteId, {headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
-    window.location.reload()
+    .then((Response)=>{
+      setSnackbaropen(true)
+      setMessage("Pending Deleted Sucessfully")
+      setTimeout(()=> fillAlert(), 3000)
+    })
   }
 
 
@@ -210,6 +229,12 @@ export default function Pending() {
    
   
   return (
+    <>
+    <Snackbar open={snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+                <Alert severity="error">
+                  {message}
+                </Alert>
+    </Snackbar>
       <div>
     <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
       <Paper className = {classes.paper}>
@@ -255,20 +280,19 @@ export default function Pending() {
             <TableCell align="left"><b>Author Name</b></TableCell>
             <TableCell align="left"><b>Description</b></TableCell>
             <TableCell align="left"><b>Price</b></TableCell>
-            <TableCell align="left"><b>Seller Name</b></TableCell>
-            <TableCell align="left"><b>Seller Address</b></TableCell>
-            <TableCell align="left"><b>Seller Phone No</b></TableCell>
             <TableCell align="left"><b>Buyer Name</b></TableCell>
             <TableCell align="left"><b>Buyer Address</b></TableCell>
             <TableCell align="left"><b>Buyer Phone No</b></TableCell>
+            <TableCell align="left"><b>Seller ID</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {pendings.map((row) => (
+            
             <TableRow>
               <TableCell>
               <IconButton
-                onClick={() => {if(window.confirm('Delete the item?')){deletePending(row.id)}}}
+                onClick={() => deletePending(row.id)}
                //onClick = {() => deletePending(row.id)}
               >
               <DeleteIcon
@@ -282,12 +306,10 @@ export default function Pending() {
               <TableCell align="left">{row.book.authorName}</TableCell>
               <TableCell align="left">{row.book.description}</TableCell>
               <TableCell align="left">{row.book.price}</TableCell>
-              <TableCell align="left">{}</TableCell>
-              <TableCell align="left">{}</TableCell>
-              <TableCell align="left">{}</TableCell>
               <TableCell align="left">{row.buyerName}</TableCell>
               <TableCell align="left">{row.buyerAddress}</TableCell>
               <TableCell align="left">{row.buyerPhoneNum}</TableCell>
+              <TableCell align="left">{row.book.sellerId}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -316,5 +338,6 @@ export default function Pending() {
       </Paper>
     </Grid>
     </div>
+    </>
   );
 }

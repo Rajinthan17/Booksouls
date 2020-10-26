@@ -5,6 +5,8 @@ import image2 from './image2.jpg'
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import userService from "./userService";
 import AuthService from './AuthService';
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 
 
 export default class Login extends Component{
@@ -19,13 +21,34 @@ export default class Login extends Component{
             code : "",
             updatePassword:false,
             otp:'',
+            isSucess:false,
+            vertical : 'top',
+            horizontal : 'center',
         }
     }
+
+    fillAlert = () => {
+        this.setState({snackbaropen:false})
+        if(this.state.isSucess){
+            window.location.reload()
+        }
+      }
+
+    codeAlert = () => {
+    this.setState({snackbaropen:false})
+    }
+
     handelUpdatePassword = (e) => {
         e.preventDefault()
         userService.forgotPasswordUpdate(this.state.username , this.state.password)
         .then((Response)=> {
             console.log(Response)
+            this.setState({snackbaropen:true,isSucess:true, message:'Password Update Successfully - Please login'})
+            setTimeout(()=> this.fillAlert(), 3000)
+        })
+        .catch((error)=>{
+            this.setState({snackbaropen:true,isSucess:false, message:'oops something went wrong please try again later'})
+            setTimeout(()=> this.fillAlert(), 3000)
         })
     }
     fogotChange = () => {
@@ -35,10 +58,13 @@ export default class Login extends Component{
     }
 
     Varification = () =>{
-        if(this.state.otp == this.state.code){
+        if(this.state.otp === this.state.code){
             this.setState({
                 updatePassword:true
             })
+        }else{
+            this.setState({snackbaropen:true,isSucess:false, message:'oops!!! Code wrong please check again'})
+            setTimeout( ()=> this.codeAlert(), 3000)
         }
     }
 
@@ -50,6 +76,10 @@ export default class Login extends Component{
                 otp : Response.data,
                 codeSubmit : true
             })
+        })
+        .catch((error)=>{
+            this.setState({snackbaropen:true,isSucess:false, message:'Incorrect Username Or Email'})
+            setTimeout(()=> this.codeAlert(), 3000)
         })
             
     }
@@ -95,11 +125,16 @@ export default class Login extends Component{
                 localStorage.setItem('token',Response.data.basicToken)
                 localStorage.setItem('tokenType',Response.data.tokenType)
                 localStorage.setItem('role',Response.data.roles)
+                localStorage.setItem('image',Response.data.image)
                 //console.log(localStorage.getItem('user'))
                 // this.props.history.push('/home')
                 // window.location.reload()
                 this.loginRender()
             })
+            .catch((error)=>{
+            this.setState({snackbaropen:true,isSucess:false, message:'Incorrect Username Or password'})
+            setTimeout(()=> this.codeAlert(), 5000)
+        })
         }
     }
 
@@ -125,8 +160,22 @@ export default class Login extends Component{
             })
     }
     render(){
-        return(   
-            !this.state.fogot ? (   
+        const { vertical, horizontal } = this.state;
+        return( 
+            <>  
+            <Snackbar open={this.state.snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+              { this.state.isSucess ? (
+                <Alert severity="success">
+                  {this.state.message}
+                </Alert>
+              ):(
+                <Alert severity="warning">
+                {this.state.message}
+              </Alert>
+              )
+              }
+            </Snackbar>
+            {!this.state.fogot ? (   
             <div style = {{padding:30}}>
                 <Grid container spacing={1}  >
                 <Grid item xs = {7} style = {{marginTop:40}}>
@@ -327,7 +376,8 @@ export default class Login extends Component{
             )
             )
             )
-            
+        }
+        </>    
     )
 }
 }

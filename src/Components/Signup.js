@@ -7,6 +7,9 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import axios from 'axios';
 import AuthService from './AuthService';
 import userService from './userService';
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+
 
 export default class Signup extends Component{
     constructor(){
@@ -21,7 +24,11 @@ export default class Signup extends Component{
             oldPassword:"",
             rememberMe: false,
             UpdatePassword : false,
-            Books:[]
+            Books:[],
+            vertical : 'top',
+            horizontal : 'center',
+            isSucess : false,
+            image:''
         }
     }
 
@@ -79,7 +86,8 @@ export default class Signup extends Component{
                     name : Response.data.username,
                     address : Response.data.address,
                     phone : Response.data.phoneNum,
-                    email : Response.data.email
+                    email : Response.data.email,
+                    image : Response.data.image
                 })
             })
         }
@@ -108,6 +116,10 @@ export default class Signup extends Component{
             name : e.target.value
         })
     }
+
+    Alert = () => {
+        this.setState({snackbaropen:false})
+        }
 
     AddressValidate = (e) => {
         this.setState ({
@@ -143,6 +155,24 @@ export default class Signup extends Component{
         })
     }
 
+    onFileChangeHandler = (e) => {
+        e.preventDefault();
+        var elements=[];
+        console.log(e.target.files.length)
+        let files = e.target.files
+        console.log(files)
+        let reader = new FileReader()
+        reader.readAsDataURL(files[0])
+        reader.onload = (e) => {
+          console.log(" Imagedata",e.target.result)
+          elements.push(e.target.result)
+          this.setState({
+            image:elements
+          })
+        }
+        // console.log(elements)
+      }
+
     // validate = () => {
     //     if( this.state.emailError ||  this.state.nameError ||  this.state.passwordError ||  this.state.repasswordError ){
     //         return false;
@@ -163,6 +193,7 @@ export default class Signup extends Component{
             email:this.state.email,
             address:this.state.address,
             phoneNum : this.state.phone,
+            image:this.state.image[0],
         }
 
 
@@ -171,12 +202,23 @@ export default class Signup extends Component{
                     userService.updateUserByUser(localStorage.getItem('id'),_user)
                     .then((Response) => {
                         console.log(Response)
+                        localStorage.setItem('image',Response.data.image)
+                        this.setState({snackbaropen:true,isSucess:true, message:'User Update Sucessfully'})
+                        setTimeout(()=> this.loginRender(), 3000)
+                    })
+                    .catch((error) => {
+                        this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
+                        setTimeout(()=> this.Alert(), 3000)
                     })
             }else{
                 userService.updatePassword(localStorage.getItem('id'),this.state.oldPassword,this.state.password)
                 .then((Response) => {
                     console.log(Response)
-                    localStorage.setItem('role',Response.data.passwordChangeToken)
+                    localStorage.setItem('token',Response.data.passwordChangeToken)
+                })
+                .catch((error) => {
+                    this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
+                    setTimeout(()=> this.Alert(), 3000)
                 })
             }
         }
@@ -186,38 +228,69 @@ export default class Signup extends Component{
     handleSubmit = (event) =>{
         event.preventDefault();
 
-        let _user = {
-            username : this.state.name,
-            email:this.state.email,
-            address:this.state.address,
-            phoneNum : this.state.phone,
-            password:this.state.password
-        }
 
-        let loginUser = {
-            username : this.state.name,
-            password:this.state.password
-        }
-       
-        AuthService.signup(_user)
-        .then((Response)=>{
-            AuthService.login(loginUser)
+        if(this.state.name.length>4 && this.state.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) &&
+        this.state.address.length>10 && this.state.phone.length==10 && this.state.password.length>=8 && this.state.password.length<=16 && this.state.repassword == this.state.password){
+
+            let _user = {
+                username : this.state.name,
+                email:this.state.email,
+                address:this.state.address,
+                phoneNum : this.state.phone,
+                password:this.state.password,
+                image:this.state.image[0],
+            }
+
+            let loginUser = {
+                username : this.state.name,
+                password:this.state.password
+            }
+        
+            AuthService.signup(_user)
             .then((Response)=>{
-                console.log(Response)
-                localStorage.setItem('user',Response.data.username)
-                localStorage.setItem('id',Response.data.id)
-                localStorage.setItem('token',Response.data.basicToken)
-                localStorage.setItem('tokenType',Response.data.tokenType)
-                this.loginRender()
+                AuthService.login(loginUser)
+                .then((Response)=>{
+                    console.log(Response)
+                    localStorage.setItem('user',Response.data.username)
+                    localStorage.setItem('id',Response.data.id)
+                    localStorage.setItem('token',Response.data.basicToken)
+                    localStorage.setItem('tokenType',Response.data.tokenType)
+                    localStorage.setItem('image',Response.data.image)
+                    this.loginRender()
+                })
+                .catch((error) => {
+                    this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
+                    setTimeout(()=> this.Alert(), 3000)
+                })
+                    
             })
-                
-        })
+            .catch((error) => {
+                this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
+                setTimeout(()=> this.Alert(), 3000)
+            })
+        }else{
+            this.setState({snackbaropen:true,isSucess:false, message:'Please fill form correctly'})
+            setTimeout(()=> this.Alert(), 3000)
+        }
     };
     render(){
+        const { vertical, horizontal } = this.state;
         console.log(this.state.Books)
         return(
-            
-            !localStorage.getItem('user') ? (
+            <>
+            <Snackbar open={this.state.snackbaropen} autoHideDuration={4000} anchorOrigin={{ vertical,horizontal }} key={vertical + horizontal}>
+              { this.state.isSucess ? (
+                <Alert severity="success">
+                  {this.state.message}
+                </Alert>
+              ):(
+                <Alert severity="warning">
+                {this.state.message}
+              </Alert>
+              )
+              }
+            </Snackbar>
+            {!localStorage.getItem('user') ? (
             <Grid container spacing={1} style = {{marginTop:30}}>
                 <Grid item xs = {7}>
                     <img src= {image4} heigth = "50%" width = "50%" alt = "Background Books"/>
@@ -324,13 +397,7 @@ export default class Signup extends Component{
                     />
                 </div>
                 <div style = {{color:"  #7b7c7e  "}}>
-                        <input
-                          accept="image/*"
-                          display="none"
-                          id="contained-button-file"
-                          multiple
-                          type="file"
-                        />
+                <input type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>
                          <br/>
                         <span style = {{fontSize:12}}>Update your Profile picture </span>
                 </div>
@@ -364,7 +431,7 @@ export default class Signup extends Component{
             </Grid>
             <Grid item xs = {1}/>
             </Grid>
-            ):( !this.state.UpdatePassword ? (
+            ):( !this.state.UpdatePassword ? (  
                 <Grid container spacing={1} style = {{marginTop:30}}>
                 <Grid item xs = {7}>
                     <img src= {image4} heigth = "50%" width = "50%" alt = "Background Books"/>
@@ -436,13 +503,7 @@ export default class Signup extends Component{
                     />
                 </div>
                 <div style = {{color:"  #7b7c7e  "}}>
-                        <input
-                          accept="image/*"
-                          display="none"
-                          id="contained-button-file"
-                          multiple
-                          type="file"
-                        />
+                <input type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>
                         <br/>
                         <span style = {{fontSize:12}}>Update your Profile picture </span>
                 </div>
@@ -545,6 +606,8 @@ export default class Signup extends Component{
             <Grid item xs = {1}/>
             </Grid>
             ))
+            }
+            </>
         );
     }
 }
