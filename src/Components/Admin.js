@@ -59,7 +59,7 @@ function Admin(){
             <Grid container spacing = {1} >
               <Grid item xs={3}/>
               
-              <Grid item xs={6} style={{marginTop:"12%"}}>
+              <Grid item xs={6} style={{marginTop:"12%",marginBottom:'12%'}}>
               <Card style = {{backgroundColor:"#8c8c8c"}} >
                 <Paper style={{margin:10}}>
                   <div style = {{padding:20}}>

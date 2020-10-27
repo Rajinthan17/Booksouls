@@ -108,6 +108,7 @@ handleReset = () => {
     phone:'',
     password:'',
     repassword:'',
+    image:''
   })
 }
 
@@ -126,7 +127,8 @@ save = () => {
           email : this.state.email,
           address : this.state.address,
           phoneNum : this.state.phone,
-          updateroles : [this.state.role]
+          updateroles : [this.state.role],
+          image:this.state.image[0],
         }
 
         userService.updateUserByAdmin(this.props.match.params.id,_user)
@@ -148,7 +150,8 @@ save = () => {
           address : this.state.address,
           phoneNum : this.state.phone,
           password : this.state.password,
-          roles : [this.state.role]
+          roles : [this.state.role],
+          image:this.state.image[0],
         }
 
         userService.createUser(_user)
@@ -164,7 +167,23 @@ save = () => {
   }
 }
 
-
+onFileChangeHandler = (e) => {
+  e.preventDefault();
+  var elements=[];
+  console.log(e.target.files.length)
+  let files = e.target.files
+  console.log(files)
+  let reader = new FileReader()
+  reader.readAsDataURL(files[0])
+  reader.onload = (e) => {
+    console.log(" Imagedata",e.target.result)
+    elements.push(e.target.result)
+    this.setState({
+      image:elements
+    })
+  }
+  // console.log(elements)
+}
 
 
 componentDidMount() {
@@ -399,13 +418,7 @@ componentDidMount() {
                         </Grid>
                         
                         <Grid item xs={6} style = {{align:'left'}} >
-                          <input
-                            accept="image/*"
-                            display="none"
-                            id="contained-button-file"
-                            multiple
-                            type="file"
-                          />
+                        <input type="file" className="form-control" name="file" onChange={this.onFileChangeHandler}/>
                           {/* <span style = {{fontSize:12}}>Update your Profile picture </span> */}
                         </Grid>
 

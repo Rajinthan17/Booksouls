@@ -202,7 +202,7 @@ export default class Signup extends Component{
                     userService.updateUserByUser(localStorage.getItem('id'),_user)
                     .then((Response) => {
                         console.log(Response)
-                        localStorage.setItem('image',Response.data.image)
+                        localStorage.setItem('image',this.state.image)
                         this.setState({snackbaropen:true,isSucess:true, message:'User Update Sucessfully'})
                         setTimeout(()=> this.loginRender(), 3000)
                     })

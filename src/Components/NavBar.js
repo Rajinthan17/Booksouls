@@ -106,14 +106,13 @@ class NavBar extends Component {
                             </Grid></>):
                             (<>
                                 
-                                <Grid item xs={2}>
-                                    <div>
-                                <Avatar size = 'small' alt="Remy Sharp" src={localStorage.getItem('image')} style = {{marginTop:20}}/>
-                                
-                                <b>{localStorage.getItem('user')}</b>
-                                
+                                <Grid item xs={1}  style = {{marginRight:0,marginTop:35}}>
+                                <span >{localStorage.getItem('user')}</span>
+                                </Grid>
+                                <Grid item xs={1}>
+                                <Avatar size = 'small'  src={localStorage.getItem('image')} style = {{display : "inline-block",marginTop:20}}/>
                                     <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} >
-                                    <ArrowDropDownCircleIcon fontSize = "small"/>
+                                    <ArrowDropDownCircleIcon fontSize = "small" />
                                     </IconButton>
                                     <Menu
                                     id="simple-menu"
@@ -127,7 +126,6 @@ class NavBar extends Component {
                                     <MenuItem onClick={this.handleClose}> <Button href = "/buy">Buy a Book</Button></MenuItem>
                                     <MenuItem onClick={this.handleLogoutClose}> <Button href = '/login'>Logout</Button></MenuItem>
                                 </Menu>
-                                </div>
                             </Grid>
                             
                             </>)}
