@@ -167,7 +167,7 @@ export default class Signup extends Component{
           console.log(" Imagedata",e.target.result)
           elements.push(e.target.result)
           this.setState({
-            image:elements
+            image:elements[0]
           })
         }
         // console.log(elements)
@@ -193,7 +193,7 @@ export default class Signup extends Component{
             email:this.state.email,
             address:this.state.address,
             phoneNum : this.state.phone,
-            image:this.state.image[0],
+            image:this.state.image,
         }
 
 
@@ -215,6 +215,8 @@ export default class Signup extends Component{
                 .then((Response) => {
                     console.log(Response)
                     localStorage.setItem('token',Response.data.passwordChangeToken)
+                    this.setState({snackbaropen:true,isSucess:true, message:'Password Update Sucessfully'})
+                        setTimeout(()=> this.loginRender(), 3000)
                 })
                 .catch((error) => {
                     this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
@@ -230,7 +232,7 @@ export default class Signup extends Component{
 
 
         if(this.state.name.length>4 && this.state.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) &&
-        this.state.address.length>10 && this.state.phone.length==10 && this.state.password.length>=8 && this.state.password.length<=16 && this.state.repassword == this.state.password){
+        this.state.address.length>10 && this.state.phone.length==10 && this.state.password.length>=8 && this.state.password.length<=16 && this.state.repassword == this.state.password && this.state.rememberMe){
 
             let _user = {
                 username : this.state.name,
@@ -238,7 +240,7 @@ export default class Signup extends Component{
                 address:this.state.address,
                 phoneNum : this.state.phone,
                 password:this.state.password,
-                image:this.state.image[0],
+                image:this.state.image,
             }
 
             let loginUser = {

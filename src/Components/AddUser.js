@@ -128,7 +128,7 @@ save = () => {
           address : this.state.address,
           phoneNum : this.state.phone,
           updateroles : [this.state.role],
-          image:this.state.image[0],
+          image:this.state.image
         }
 
         userService.updateUserByAdmin(this.props.match.params.id,_user)
@@ -151,7 +151,7 @@ save = () => {
           phoneNum : this.state.phone,
           password : this.state.password,
           roles : [this.state.role],
-          image:this.state.image[0],
+          image:this.state.image,
         }
 
         userService.createUser(_user)
@@ -179,7 +179,7 @@ onFileChangeHandler = (e) => {
     console.log(" Imagedata",e.target.result)
     elements.push(e.target.result)
     this.setState({
-      image:elements
+      image:elements[0]
     })
   }
   // console.log(elements)
@@ -233,6 +233,7 @@ componentDidMount() {
               email : Response.data.email,
               phone : Response.data.phoneNum,
               address : Response.data.address,
+              image : Response.data.image
             })
             if(Response.data.roles[0].name === "ROLE_ADMIN"){
               this.setState ({role:'admin'})

@@ -251,7 +251,7 @@ export default class Buy extends Component{
                             <Button onClick={this.handleClose} color="primary">
                               Cancel
                             </Button>
-                            <Button  onClick = {this.IsAlert} color="primary">
+                            <Button  onClick = {() => this.IsAlert()} color="primary">
                               Accpet
                             </Button>
                           </DialogActions>

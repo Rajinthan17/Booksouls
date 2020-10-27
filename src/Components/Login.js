@@ -30,7 +30,7 @@ export default class Login extends Component{
     fillAlert = () => {
         this.setState({snackbaropen:false})
         if(this.state.isSucess){
-            window.location.reload()
+            this.props.history.push('/home')
         }
       }
 
@@ -58,7 +58,8 @@ export default class Login extends Component{
     }
 
     Varification = () =>{
-        if(this.state.otp === this.state.code){
+        if(this.state.otp == this.state.code){
+            this.setState({snackbaropen:false,isSucess:false})
             this.setState({
                 updatePassword:true
             })
