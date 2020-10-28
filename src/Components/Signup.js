@@ -207,7 +207,7 @@ export default class Signup extends Component{
                         setTimeout(()=> this.loginRender(), 3000)
                     })
                     .catch((error) => {
-                        this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
+                        this.setState({snackbaropen:true,isSucess:false, message:error.message})
                         setTimeout(()=> this.Alert(), 3000)
                     })
             }else{
@@ -219,7 +219,8 @@ export default class Signup extends Component{
                         setTimeout(()=> this.loginRender(), 3000)
                 })
                 .catch((error) => {
-                    this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
+                    console.log(error)
+                    this.setState({snackbaropen:true,isSucess:false, message:error.message})
                     setTimeout(()=> this.Alert(), 3000)
                 })
             }
@@ -267,8 +268,9 @@ export default class Signup extends Component{
                     
             })
             .catch((error) => {
-                this.setState({snackbaropen:true,isSucess:false, message:'oops Somthing went wrong'})
-                setTimeout(()=> this.Alert(), 3000)
+                console.log(error.message)
+                this.setState({snackbaropen:true,isSucess:false, message:"Username 0r Email Already taken"})
+                // setTimeout(()=> this.Alert(), 3000)
             })
         }else{
             this.setState({snackbaropen:true,isSucess:false, message:'Please fill form correctly'})
