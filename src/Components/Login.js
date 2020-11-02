@@ -178,11 +178,11 @@ export default class Login extends Component{
             </Snackbar>
             {!this.state.fogot ? (   
             <div style = {{padding:30}}>
-                <Grid container spacing={1}  >
+                <Grid container spacing={1} style = {{marginBottom:"10%"}} >
                 <Grid item xs = {7} style = {{marginTop:40}}>
                     <img src= {image2} heigth = "50%" width = "50%" alt = "Background Books"/>
                 </Grid>
-                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c"}}>
+                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c",marginTop:105}}>
                     <Paper className = 'paper'>
                     <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}onSubmit={this.handleSubmit}>
                         <div>
@@ -239,11 +239,11 @@ export default class Login extends Component{
             </div>
             ):( !this.state.codeSubmit ? (
                 <div style = {{padding:20}}>
-                <Grid container spacing={1}  >
+                <Grid container spacing={1} style = {{marginBottom:"17%"}} >
                 <Grid item xs = {7}>
                     <img src= {image2} heigth = "40%" width = "40%"/>
                 </Grid>
-                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c"}}>
+                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c" , marginTop:105}}>
                     <Paper style = {{padding : 30}}>
                     <form onSubmit = {this.handleSubmit}>
                         <div>
@@ -278,11 +278,11 @@ export default class Login extends Component{
                 </div>
             ):(!this.state.updatePassword ? (
                 <div style = {{padding:20}}>
-                <Grid container spacing={1}  >
+                <Grid container spacing={1} style = {{marginBottom:"17%"}} >
                 <Grid item xs = {7}>
                 <img src= {image2} heigth = "40%" width = "40%"/>
                 </Grid>
-                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c"}}>
+                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c" ,marginTop:105}}>
                     <Paper style = {{padding : 30}}>
                     <form onSubmit = {this.Varification}>
                         <div>
@@ -316,11 +316,11 @@ export default class Login extends Component{
                 </div>
             ):(
                 <div style = {{padding:20}}>
-                <Grid container spacing={1}  >
+                <Grid container spacing={1} style = {{marginBottom:"17%"}} >
                 <Grid item xs = {7}>
                     <img src= {image2} heigth = "40%" width = "40%"/>
                 </Grid>
-                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c"}}>
+                <Grid item xs={4} style = {{backgroundColor:"#8c8c8c",marginTop:105}}>
                     <Paper style = {{padding : 30}}>
                     <ValidatorForm noValidate autoComplete="off" style={{width:'100%'}}onSubmit={this.handleSubmit}>
                         <div>

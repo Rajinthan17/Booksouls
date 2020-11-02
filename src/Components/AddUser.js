@@ -263,7 +263,7 @@ componentDidMount() {
               )
               }
             </Snackbar>
-          <Grid container>
+          <Grid container style = {{marginBottom:"11%"}}>
             <Grid item xs={2}/>
             <Grid item xs={8}>
               <Card style={style.root}>

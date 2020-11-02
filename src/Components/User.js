@@ -218,7 +218,7 @@ const deleteUser = (id) => {
                   {message}
                 </Alert>
     </Snackbar>
-    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
+    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c",marginBottom:"7%" }} >
       <Paper className = {classes.paper}>
         <h1>User Details</h1>
         <div className={classes.search}>

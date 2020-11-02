@@ -211,7 +211,7 @@ onFileChangeHandler = (e) => {
             </Snackbar>
           </div>
           
-          <Grid container>
+          <Grid container style={{marginBottom:"8%"}}>
               <Grid item xs={1}/>
               <Grid item xs={5} style = {{marginTop:60}}>
                   <img src= {image5}  alt = "Background Books"/>
