@@ -247,7 +247,7 @@ export default function BookDetails(props) {
                 </Alert>
     </Snackbar>
       <div >
-    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
+    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c",marginBottom:"19%"}}>
       <Paper className = {classes.paper}>
         <h1>Book Details</h1>
         <div className={classes.search}>

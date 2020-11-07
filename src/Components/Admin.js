@@ -12,7 +12,7 @@ function Admin(){
     return(
         <>
         {localStorage.getItem('role') == "ROLE_ADMIN" ?(
-        <Grid container spacing={1} style = {{fontFamily:"monospace"}}>
+        <Grid container spacing={1} style = {{fontFamily:"monospace",marginBottom:"6%"}}>
                 <Grid item xs = {2}/>
                 <Grid item xs = {8} style ={{margin : "5%"}}>
                     <Card style = {{backgroundColor:"#dde4e6"}}>

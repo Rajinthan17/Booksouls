@@ -207,12 +207,12 @@ fillAlert = () => {
             </Snackbar>
           </div>
           {localStorage.getItem('user') ?(
-          <Grid container>
-              <Grid item xs={1}/>
+          <Grid container style = {{marginBottom:"9%"}}>
+              <Grid item xs={1} />
               <Grid item xs={5} style = {{marginTop:60}}>
                   <img src= {image5}  alt = "Background Books"/>
               </Grid>
-              <Grid item xs={1}/>
+              <Grid item xs={1} />
               <Grid item xs={4}>
               <Card style={style.root} >
                 <Paper style={{margin:10}}>
@@ -474,7 +474,7 @@ fillAlert = () => {
             <Grid container spacing = {1} >
               <Grid item xs={3}/>
               
-              <Grid item xs={6} style={{marginTop:"12%",margin:'12%'}}>
+              <Grid item xs={6} style={{marginTop:"12%",marginBottom:'23%'}}>
               <Card style = {{backgroundColor:"#8c8c8c"}} >
                 <Paper style={{margin:10}}>
                   <div style = {{padding:20}}>

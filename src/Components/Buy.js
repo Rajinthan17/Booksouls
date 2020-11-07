@@ -171,7 +171,7 @@ export default class Buy extends Component{
               }
             </Snackbar>
           </div>
-        <Grid container spacing = {1}  style = {{marginTop:30}}> 
+        <Grid container spacing = {1}  style = {{marginTop:30,marginBottom:"17%"}}> 
         <Grid item xs={5}>
           <img src = {image3} height = "65%" width = "70%" alt = "Background Books"/>
         </Grid>
@@ -252,7 +252,7 @@ export default class Buy extends Component{
                               Cancel
                             </Button>
                             <Button  onClick = {() => this.IsAlert()} color="primary">
-                              Accpet
+                              Accept
                             </Button>
                           </DialogActions>
                         </Dialog>

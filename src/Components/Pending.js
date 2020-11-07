@@ -236,7 +236,7 @@ export default function Pending() {
                 </Alert>
     </Snackbar>
       <div>
-    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c"}}>
+    <Grid className={classes.grid} style = {{backgroundColor:"#8c8c8c",marginBottom:"5%"}}>
       <Paper className = {classes.paper}>
         <h1>Pending Deliver Details</h1>
         <div className={classes.search}>
