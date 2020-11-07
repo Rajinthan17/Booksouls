@@ -172,7 +172,7 @@ fillAlert = () => {
     }
     if(this.state.name && this.state.authorName && this.state.description && this.state.category
       && this.state.isbNumber && this.state.price && this.state.image && this.state.usage){
-      axios.post('http://localhost:8081/books',book)
+      axios.post('http://localhost:8081/books',book,{headers : {"Authorization" : localStorage.getItem('tokenType') + " " + localStorage.getItem('token')}})
       .then((Resposne) => {
         console.log(Response)
         this.setState({snackbaropen:true,isSucess:true, message:'Book Added Successfully'})
